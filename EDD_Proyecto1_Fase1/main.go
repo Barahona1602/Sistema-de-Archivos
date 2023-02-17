@@ -7,10 +7,10 @@ import (
 )
 
 type User struct {
-	name     string
-	surname  string
-	username string
-	password string
+	nombre     string
+	apellido   string
+	carnet     string
+	contraseña string
 }
 
 type Node struct {
@@ -45,69 +45,95 @@ func (dll *DoublyLinkedList) Insert(user User) {
 
 func main() {
 	queue := Queue{}
-	var name, surname, username, password string
-
-	fmt.Println("Ingrese datos para agregar a la cola (presione Enter para terminar):")
-	scanner := bufio.NewScanner(os.Stdin)
-
+	var nombre, apellido, carnet, contraseña string
 	for {
-		fmt.Print("Nombre: ")
+		fmt.Println("* * * * * * * Administración de usuarios * * * * * * *")
+		fmt.Println("*      1. Ver estudiantes pendientes de aprobación   *")
+		fmt.Println("*      2. Ver estudiantes aprobados                  *")
+		fmt.Println("*      3. Registrar nuevo estudiante                 *")
+		fmt.Println("*      4. Carga masiva de estudiantes                *")
+		fmt.Println("*      5. Cerrar sesión                              *")
+		fmt.Println("* * * * * * * * * * * * * *  * * * * * * * * * * * * *")
+
+		var choice int
+		fmt.Scan(&choice)
+		scanner := bufio.NewScanner(os.Stdin)
 		scanner.Scan()
-		name = scanner.Text()
-		if name == "" {
-			break
+		doublyLinkedList := DoublyLinkedList{}
+
+		switch choice {
+		case 1:
+			fmt.Println("Ha seleccionado la opción 1")
+			fmt.Println("Los usuarios en la cola son:")
+			for i, user := range queue {
+				fmt.Printf("%d - Nombre: %s, Apellido: %s, Usuario: %s, Contraseña: %s\n", i+1, user.nombre, user.apellido, user.carnet, user.contraseña)
+			}
+
+			for {
+				fmt.Print("¿A qué usuario desea aprobar? (0 para terminar): ")
+				scanner.Scan()
+				answer := scanner.Text()
+				index := 0
+				fmt.Sscan(answer, &index)
+				if index == 0 {
+					break
+				}
+
+				if index < 1 || index > len(queue) {
+					fmt.Println("Indice inválido")
+					continue
+				}
+				user := queue[index-1]
+				fmt.Printf("¿Desea agregar al usuario %s %s a la lista doblemente enlazada? (y/n): ", user.nombre, user.apellido)
+				scanner.Scan()
+				answer = scanner.Text()
+				if answer == "y" {
+					doublyLinkedList.Insert(user)
+					fmt.Printf("El usuario %s %s ha sido agregado a la lista doblemente enlazada\n", user.nombre, user.apellido)
+				}
+
+			}
+			//Arreglar lista doblemente enlazada
+		case 2:
+			fmt.Println("Ha seleccionado la opción 2")
+			fmt.Println("Los usuarios en la lista doblemente enlazada son:")
+			for node := doublyLinkedList.head; node != nil; node = node.next {
+				fmt.Printf("Nombre: %s, Apellido: %s, Usuario: %s, Contraseña: %s\n", node.user.nombre, node.user.apellido, node.user.carnet, node.user.contraseña)
+			}
+
+		case 3:
+			fmt.Println("Ha seleccionado la opción 3")
+			fmt.Println("Ingrese datos para agregar a la cola:")
+			for {
+				fmt.Print("Nombre: ")
+				scanner.Scan()
+				nombre = scanner.Text()
+				if nombre == "" {
+					break
+				}
+
+				fmt.Print("Apellido: ")
+				scanner.Scan()
+				apellido = scanner.Text()
+
+				fmt.Print("Usuario: ")
+				scanner.Scan()
+				carnet = scanner.Text()
+
+				fmt.Print("Contraseña: ")
+				scanner.Scan()
+				contraseña = scanner.Text()
+
+				user2 := User{nombre: nombre, apellido: apellido, carnet: carnet, contraseña: contraseña}
+				queue.Enqueue(user2)
+			}
+		case 4:
+			fmt.Println("Ha seleccionado la opción 4")
+		case 5:
+			return
+		default:
+			fmt.Println("Opción inválida, por favor intente de nuevo.")
 		}
-
-		fmt.Print("Apellido: ")
-		scanner.Scan()
-		surname = scanner.Text()
-
-		fmt.Print("Usuario: ")
-		scanner.Scan()
-		username = scanner.Text()
-
-		fmt.Print("Contraseña: ")
-		scanner.Scan()
-		password = scanner.Text()
-
-		user := User{name: name, surname: surname, username: username, password: password}
-		queue.Enqueue(user)
 	}
 
-	fmt.Println("Los usuarios en la cola son:")
-	for i, user := range queue {
-		fmt.Printf("%d - Nombre: %s, Apellido: %s, Usuario: %s, Contraseña: %s\n", i+1, user.name, user.surname, user.username, user.password)
-	}
-
-	doublyLinkedList := DoublyLinkedList{}
-
-	for {
-		fmt.Print("¿A qué usuario desea aprobar? (0 para terminar): ")
-		scanner.Scan()
-		answer := scanner.Text()
-		index := 0
-		fmt.Sscan(answer, &index)
-		if index == 0 {
-			break
-		}
-
-		if index < 1 || index > len(queue) {
-			fmt.Println("Indice inválido")
-			continue
-		}
-
-		user := queue[index-1]
-		fmt.Printf("¿Desea agregar al usuario %s %s a la lista doblemente enlazada? (y/n): ", user.name, user.surname)
-		scanner.Scan()
-		answer = scanner.Text()
-		if answer == "y" {
-			doublyLinkedList.Insert(user)
-			fmt.Printf("El usuario %s %s ha sido agregado a la lista doblemente enlazada\n", user.name, user.surname)
-		}
-	}
-
-	fmt.Println("Los usuarios en la lista doblemente enlazada son:")
-	for node := doublyLinkedList.head; node != nil; node = node.next {
-		fmt.Printf("Nombre: %s, Apellido: %s, Usuario: %s, Contraseña: %s\n", node.user.name, node.user.surname, node.user.username, node.user.password)
-	}
 }
