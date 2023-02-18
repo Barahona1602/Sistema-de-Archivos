@@ -2,8 +2,11 @@ package main
 
 import (
 	"bufio"
+	"encoding/csv"
 	"fmt"
 	"os"
+
+	"github.com/sqweek/dialog"
 )
 
 type User struct {
@@ -44,6 +47,7 @@ func (dll *DoublyLinkedList) Insert(user User) {
 }
 
 func main() {
+	doublyLinkedList := DoublyLinkedList{}
 	queue := Queue{}
 	var nombre, apellido, carnet, contraseña string
 	for {
@@ -59,7 +63,6 @@ func main() {
 		fmt.Scan(&choice)
 		scanner := bufio.NewScanner(os.Stdin)
 		scanner.Scan()
-		doublyLinkedList := DoublyLinkedList{}
 
 		switch choice {
 		case 1:
@@ -90,6 +93,9 @@ func main() {
 				if answer == "y" {
 					doublyLinkedList.Insert(user)
 					fmt.Printf("El usuario %s %s ha sido agregado a la lista doblemente enlazada\n", user.nombre, user.apellido)
+					// Eliminar el usuario seleccionado de la cola
+					copy(queue[index-1:], queue[index:])
+					queue = queue[:len(queue)-1]
 				}
 
 			}
@@ -129,6 +135,37 @@ func main() {
 			}
 		case 4:
 			fmt.Println("Ha seleccionado la opción 4")
+			// Seleccionar archivo CSV
+			path, err := dialog.File().Filter("CSV Files", "csv").Title("Seleccionar archivo CSV").Load()
+			if err != nil {
+				fmt.Println("Error al seleccionar archivo:", err)
+			}
+
+			// Abrir archivo CSV
+			file, err := os.Open(path)
+			if err != nil {
+				fmt.Println("Error al abrir archivo:", err)
+			}
+
+			defer file.Close()
+
+			reader := csv.NewReader(file)
+			reader.Comma = ','
+
+			records, err := reader.ReadAll()
+			if err != nil {
+				panic(err)
+			}
+
+			for _, record := range records {
+				user := User{
+					nombre:     record[0],
+					apellido:   record[1],
+					carnet:     record[2],
+					contraseña: record[3],
+				}
+				queue.Enqueue(user)
+			}
 		case 5:
 			return
 		default:
