@@ -167,11 +167,12 @@ func admin() {
 
 			for {
 				fmt.Println("Ha seleccionado la opción 1")
-				fmt.Println("Los usuarios en la cola son:")
+				fmt.Println("Los usuarios pendientes de aprobación son:")
 				for i, user := range queue {
 					fmt.Printf("%d - Nombre: %s, Apellido: %s, Carnet: %s, Contraseña: %s\n", i+1, user.nombre, user.apellido, user.carnet, user.contraseña)
 				}
-				fmt.Print("¿A qué usuario desea aprobar? (0 para terminar): ")
+				fmt.Println("¿A qué usuario desea aprobar?")
+				fmt.Println("Ingrese 0 para salir")
 				scanner.Scan()
 				answer := scanner.Text()
 				index := 0
@@ -185,12 +186,12 @@ func admin() {
 					continue
 				}
 				user := queue[index-1]
-				fmt.Printf("¿Desea agregar al usuario %s %s a la lista doblemente enlazada? (y/n): ", user.nombre, user.apellido)
+				fmt.Printf("¿Desea agregar al usuario %s %s al sistema? (y/n): ", user.nombre, user.apellido)
 				scanner.Scan()
 				answer = scanner.Text()
 				if answer == "y" {
 					doublyLinkedList.Insert(user)
-					fmt.Printf("El usuario %s %s ha sido agregado a la lista doblemente enlazada\n", user.nombre, user.apellido)
+					fmt.Printf("El usuario %s %s ha sido agregado correctamente al sistema\n", user.nombre, user.apellido)
 					// Eliminar el usuario seleccionado de la cola
 					copy(queue[index-1:], queue[index:])
 					queue = queue[:len(queue)-1]
@@ -201,7 +202,7 @@ func admin() {
 			// Ver estudiantes aprobados
 		case 2:
 			fmt.Println("Ha seleccionado la opción 2")
-			fmt.Println("Los usuarios en la lista doblemente enlazada son:")
+			fmt.Println("Los usuarios aprobados en el sistema son:")
 			doublyLinkedList.OrdenarPorCarnet()
 			for node := doublyLinkedList.head; node != nil; node = node.next {
 				fmt.Printf("Nombre: %s, Apellido: %s, Carnet: %s, Contraseña: %s\n", node.user.nombre, node.user.apellido, node.user.carnet, node.user.contraseña)
@@ -210,7 +211,7 @@ func admin() {
 			// Registrar nuevo estudiante
 		case 3:
 			fmt.Println("Ha seleccionado la opción 3")
-			fmt.Println("Ingrese datos para agregar a la cola:")
+			fmt.Println("Ingrese datos para agregar al usuario:")
 			for {
 				fmt.Print("Nombre: ")
 				scanner.Scan()
