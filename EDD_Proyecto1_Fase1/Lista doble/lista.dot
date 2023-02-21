@@ -1,0 +1,12 @@
+digraph G {
+  node [shape=box];
+  rankdir=LR;
+  201780044 [label="Leonardo Martinez
+201780044"];
+  201709018 [label="Cristian Suy
+201709018"];
+  202110770 [label="Canelo Huertas
+202110770"];
+  201780044 -> 201709018 [dir=both];
+  201709018 -> 202110770 [dir=both];
+}

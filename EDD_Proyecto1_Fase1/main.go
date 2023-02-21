@@ -3,7 +3,9 @@ package main
 import (
 	"bufio"
 	"encoding/csv"
+	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"strings"
@@ -30,11 +32,47 @@ type DoublyLinkedList struct {
 	tail *Node
 }
 
+func (dll *DoublyLinkedList) ToJSON() error {
+	// Recorrer la lista enlazada y crear un array de mapas
+	users := []map[string]string{}
+	currentNode := dll.head
+	for currentNode != nil {
+		userMap := map[string]string{
+			"nombre":       currentNode.user.nombre + " " + currentNode.user.apellido,
+			"carnet":       currentNode.user.carnet,
+			"contraseña":   currentNode.user.contraseña,
+			"carpeta_raiz": "/",
+		}
+		users = append(users, userMap)
+		currentNode = currentNode.next
+	}
+
+	// Escribir la cadena de texto en un archivo
+	f, err := os.Create("usuarios.json")
+	if err != nil {
+		fmt.Println("Error al crear archivo .json:", err)
+		return err
+	}
+	defer f.Close()
+
+	encoder := json.NewEncoder(f)
+	encoder.SetIndent("", "  ")
+	err = encoder.Encode(users)
+	if err != nil {
+		fmt.Println("Error al escribir datos en archivo .json:", err)
+		return err
+	}
+	fmt.Println("Archivo .json generado exitosamente")
+
+	return nil
+}
+
 // Colas de estudiantes
 type Queue []User
 
 func (q *Queue) Enqueue(user User) {
 	*q = append(*q, user)
+	q.ToGraphviz()
 }
 
 func (dll *DoublyLinkedList) Insert(user User) {
@@ -100,7 +138,7 @@ func (s *Stack) Push(nombre string, apellido string, hora string, carnet string)
 
 // Graphviz para pila de inicio de sesión
 func generateGraph(s Stack) {
-	f, err := os.Create("estudiantes.dot")
+	f, err := os.Create("Inicios de sesión/estudiantes.dot")
 	if err != nil {
 		fmt.Println("Error al crear archivo de grafo:", err)
 		return
@@ -173,7 +211,7 @@ func generateGraph(s Stack) {
 		return
 	}
 
-	cmd := exec.Command("dot", "-Tpng", "estudiantes.dot", "-o", "estudiantes.png")
+	cmd := exec.Command("dot", "-Tpng", "Inicios de sesión/estudiantes.dot", "-o", "Inicios de sesión/estudiantes.png")
 	if err = cmd.Run(); err != nil {
 		fmt.Println("Error al generar imagen de grafo:", err)
 		return
@@ -182,7 +220,7 @@ func generateGraph(s Stack) {
 
 // Graphviz para pila de inicio de sesión
 func generateGraph2(s2 Stack2) {
-	f, err := os.Create("admin.dot")
+	f, err := os.Create("Aprobación de estudiantes/admin.dot")
 	if err != nil {
 		fmt.Println("Error al crear archivo de grafo:", err)
 		return
@@ -262,11 +300,115 @@ func generateGraph2(s2 Stack2) {
 		return
 	}
 
-	cmd := exec.Command("dot", "-Tpng", "admin.dot", "-o", "admin.png")
+	cmd := exec.Command("dot", "-Tpng", "Aprobación de estudiantes/admin.dot", "-o", "Aprobación de estudiantes/admin.png")
 	if err = cmd.Run(); err != nil {
 		fmt.Println("Error al generar imagen de grafo:", err)
 		return
 	}
+}
+
+func (q *Queue) ToGraphviz() {
+	if len(*q) == 0 {
+		fmt.Println("La cola está vacía")
+		return
+	}
+
+	// Construir el grafo
+	var b strings.Builder
+	b.WriteString("digraph {\n")
+	b.WriteString("    rankdir=\"TB\";\n")
+	for i, user := range *q {
+		fmt.Fprintf(&b, "    node%d[label=\"%v\"];\n", i, user)
+		if i > 0 {
+			fmt.Fprintf(&b, "    node%d -> node%d;\n", i-1, i)
+		}
+	}
+	b.WriteString("}")
+
+	// Escribir el archivo .dot
+	dotFile, err := os.Create("Estudiantes en cola/queue.dot")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer dotFile.Close()
+	_, err = dotFile.WriteString(b.String())
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	// Generar el gráfico con Graphviz
+	cmd := exec.Command("dot", "-Tpng", "Estudiantes en cola/queue.dot", "-o", "Estudiantes en cola/queue.png")
+	err = cmd.Run()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("Archivo de imagen generado en queue.png")
+}
+
+func (dll *DoublyLinkedList) ToGraphviz2() error {
+	// Abrir el archivo de salida
+	f, err := os.Create("Lista doble/lista.dot")
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	// Escribir el encabezado del archivo DOT
+	_, err = fmt.Fprintln(f, "digraph G {")
+	if err != nil {
+		return err
+	}
+
+	// Agregar los atributos shape y rankdir
+	_, err = fmt.Fprintln(f, "  node [shape=box];")
+	if err != nil {
+		return err
+	}
+	_, err = fmt.Fprintln(f, "  rankdir=LR;")
+	if err != nil {
+		return err
+	}
+
+	// Recorrer la lista doblemente enlazada y escribir los nodos
+	node := dll.head
+	for node != nil {
+		nodeLabel := fmt.Sprintf("%s %s\n%s", node.user.nombre, node.user.apellido, node.user.carnet)
+		_, err = fmt.Fprintf(f, "  %s [label=\"%s\"];\n", node.user.carnet, nodeLabel)
+		if err != nil {
+			return err
+		}
+		node = node.next
+	}
+
+	// Recorrer la lista doblemente enlazada y escribir las conexiones
+	node = dll.head
+	for node != nil {
+		if node.next != nil {
+			_, err = fmt.Fprintf(f, "  %s -> %s [dir=both];\n", node.user.carnet, node.next.user.carnet)
+			if err != nil {
+				return err
+			}
+		}
+		node = node.next
+	}
+
+	// Escribir el pie del archivo DOT
+	_, err = fmt.Fprintln(f, "}")
+	if err != nil {
+		return err
+	}
+
+	// Ejecutar el comando dot para generar el archivo PNG
+	cmd := exec.Command("dot", "-Tpng", "Lista doble/lista.dot", "-o", "Lista doble/lista.png")
+	err = cmd.Run()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // Función para ordenar lista por carnet
@@ -354,8 +496,6 @@ func menuInicioSesion(dll *DoublyLinkedList) {
 				now := time.Now()
 				var hora string = now.Format("02/01/2006 15:04:05")
 				s.Push("admin", "", hora, carnet)
-
-				fmt.Println("La pila es:", s)
 				admin()
 				continue
 			} else {
@@ -384,8 +524,6 @@ func menuInicioSesion(dll *DoublyLinkedList) {
 
 			s.Push(userNode.user.nombre, userNode.user.apellido, hora, carnet)
 
-			fmt.Println("La pila es:", s)
-
 			fmt.Print("¿Desea salir? (y/n)")
 			var opcion2 string
 			fmt.Scan(&opcion2)
@@ -406,7 +544,6 @@ var s2 Stack2
 
 // Función para administrar usuarios
 func admin() {
-
 	var nombre, apellido, carnet, contraseña string
 	for {
 		fmt.Println("* * * * * * * Administración de usuarios * * * * * * *")
@@ -453,10 +590,13 @@ func admin() {
 				answer = scanner.Text()
 				if answer == "y" {
 					doublyLinkedList.Insert(user)
+					doublyLinkedList.ToJSON()
 					fmt.Printf("El usuario %s %s ha sido agregado correctamente al sistema\n", user.nombre, user.apellido)
 					// Eliminar el usuario seleccionado de la cola
 					copy(queue[index-1:], queue[index:])
 					queue = queue[:len(queue)-1]
+					queue.ToGraphviz()
+					doublyLinkedList.ToGraphviz2()
 					now2 := time.Now()
 					var hora string = now2.Format("02/01/2006 15:04:05")
 					s2.Push("Se aprobó a Estudiante" + "\n" + hora)
@@ -516,19 +656,30 @@ func admin() {
 			file, err := os.Open(path)
 			if err != nil {
 				fmt.Println("Error al abrir archivo:", err)
+				continue
 			}
-
 			defer file.Close()
 
 			reader := csv.NewReader(file)
 			reader.Comma = ','
 
-			records, err := reader.ReadAll()
-			if err != nil {
-				panic(err)
+			// Leer y descartar la primera línea
+			if _, err := reader.Read(); err != nil {
+				fmt.Println("Error al leer la primera línea:", err)
 			}
 
-			for _, record := range records {
+			// Leer registros y procesarlos
+			for {
+				record, err := reader.Read()
+				if err == io.EOF {
+					break
+				}
+				if err != nil {
+					fmt.Println("Error al leer registro:", err)
+					continue
+				}
+
+				// Procesar registro
 				nombresplit := record[1]
 				palabras := strings.Split(nombresplit, " ")
 				nombre := palabras[0]

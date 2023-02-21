@@ -1,0 +1,13 @@
+digraph {
+rankdir=LR;
+node [shape=box]
+{rank=same "Se aprobó a Estudiante
+21/02/2023 12:00:01""Se aprobó a Estudiante
+21/02/2023 12:00:03""Se aprobó a Estudiante
+21/02/2023 12:00:14"}
+edge [dir=none]
+{rank=same "Se aprobó a Estudiante
+21/02/2023 12:00:01" -> "Se aprobó a Estudiante
+21/02/2023 12:00:03" -> "Se aprobó a Estudiante
+21/02/2023 12:00:14"}
+}
