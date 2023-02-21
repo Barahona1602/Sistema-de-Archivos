@@ -1,0 +1,12 @@
+digraph {
+node [shape=box]
+{rank=same "admin
+admin 
+Se inició sesión:
+20/02/2023 23:54:41"}
+edge [dir=none]
+{rank=same "admin
+admin 
+Se inició sesión:
+20/02/2023 23:54:41"}
+}
