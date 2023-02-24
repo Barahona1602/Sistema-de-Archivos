@@ -144,8 +144,9 @@ func admin() {
 				for i, user := range queue {
 					fmt.Printf("%d - Nombre: %s, Apellido: %s, Carnet: %s, Contraseña: %s\n", i+1, user.nombre, user.apellido, user.carnet, user.contraseña)
 				}
-				fmt.Println("¿A qué usuario desea aprobar?")
-				fmt.Println("Ingrese 0 para salir")
+				fmt.Println("- - - - - - - - - - - - - - - - - - - - ")
+				fmt.Println("Presione 0 para salir")
+				fmt.Print("Ingrese el número del usuario a aprobar: ")
 				scanner.Scan()
 				answer := scanner.Text()
 				index := 0
@@ -159,9 +160,14 @@ func admin() {
 					continue
 				}
 				user := queue[index-1]
+				if CarnetExists(user.carnet) {
+					fmt.Println("El carnet ya existe en la lista de estudiantes aprobados. No se puede agregar el usuario.")
+					continue
+				}
 				fmt.Printf("¿Desea agregar al usuario %s %s al sistema? (y/n): ", user.nombre, user.apellido)
 				scanner.Scan()
 				answer = scanner.Text()
+
 				if answer == "y" {
 					doublyLinkedList.Insert(user)
 					doublyLinkedList.ToJSON()
@@ -207,12 +213,19 @@ func admin() {
 				scanner.Scan()
 				carnet = scanner.Text()
 
+				if CarnetExists(carnet) {
+					fmt.Println("El carnet ya existe en la lista de estudiantes aprobados. No se puede agregar el usuario.")
+					continue
+				}
+
 				fmt.Print("Contraseña: ")
 				scanner.Scan()
 				contraseña = scanner.Text()
 
 				user2 := User{nombre: nombre, apellido: apellido, carnet: carnet, contraseña: contraseña}
 				queue.Enqueue(user2)
+
+				fmt.Println("- - - - - - - - - - - - - - - - - ")
 			}
 
 			// Carga masiva de estudiantes
@@ -278,4 +291,13 @@ func admin() {
 		}
 	}
 
+}
+
+func CarnetExists(carnet string) bool {
+	for node := doublyLinkedList.head; node != nil; node = node.next {
+		if node.user.carnet == carnet {
+			return true
+		}
+	}
+	return false
 }

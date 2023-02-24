@@ -7,89 +7,49 @@ import (
 	"strings"
 )
 
-// Graphviz para pila de inicio de sesión
-func generateGraph(s Stack) {
-	f, err := os.Create("Inicios de sesión/estudiantes.dot")
-	if err != nil {
-		fmt.Println("Error al crear archivo de grafo:", err)
-		return
-	}
-	defer f.Close()
-
-	_, err = f.WriteString("digraph {\n")
-	if err != nil {
-		fmt.Println("Error al escribir en archivo de grafo:", err)
+// Graphviz de la cola de estudiantes
+func (q *Queue) ToGraphviz() {
+	if len(*q) == 0 {
+		fmt.Println("La cola está vacía")
 		return
 	}
 
-	// Escribir nodos
-	_, err = f.WriteString("node [shape=box]\n")
-	if err != nil {
-		fmt.Println("Error al escribir en archivo de grafo:", err)
-		return
-	}
-	_, err = f.WriteString("{rank=same ")
-	if err != nil {
-		fmt.Println("Error al escribir en archivo de grafo:", err)
-		return
-	}
-	for i, v := range s {
-		_, err = f.WriteString(fmt.Sprintf("\"%s\"", v))
-		if err != nil {
-			fmt.Println("Error al escribir en archivo de grafo:", err)
-			return
-		}
-		if i < len(s)-1 {
-			_, err = f.WriteString(" -> ")
-			if err != nil {
-				fmt.Println("Error al escribir en archivo de grafo:", err)
-				return
-			}
+	// Construir el grafo
+	var b strings.Builder
+	b.WriteString("digraph {\n")
+	b.WriteString("    rankdir=\"TB\";\n")
+	for i, user := range *q {
+		fmt.Fprintf(&b, "    node%d[label=\"%v\"];\n", i, user)
+		if i > 0 {
+			fmt.Fprintf(&b, "    node%d -> node%d;\n", i-1, i)
 		}
 	}
-	_, err = f.WriteString("}\n")
+	b.WriteString("}")
 
-	// Escribir conexiones
-	_, err = f.WriteString("edge [dir=none]\n")
+	// Escribir el archivo .dot
+	dotFile, err := os.Create("Estudiantes en cola/queue.dot")
 	if err != nil {
-		fmt.Println("Error al escribir en archivo de grafo:", err)
+		fmt.Println(err)
 		return
 	}
-	_, err = f.WriteString("{rank=same ")
+	defer dotFile.Close()
+	_, err = dotFile.WriteString(b.String())
 	if err != nil {
-		fmt.Println("Error al escribir en archivo de grafo:", err)
-		return
-	}
-	for i, v := range s {
-		_, err = f.WriteString(fmt.Sprintf("\"%s\"", v))
-		if err != nil {
-			fmt.Println("Error al escribir en archivo de grafo:", err)
-			return
-		}
-		if i < len(s)-1 {
-			_, err = f.WriteString(" -> ")
-			if err != nil {
-				fmt.Println("Error al escribir en archivo de grafo:", err)
-				return
-			}
-		}
-	}
-	_, err = f.WriteString("}\n")
-
-	_, err = f.WriteString("}\n")
-	if err != nil {
-		fmt.Println("Error al escribir en archivo de grafo:", err)
+		fmt.Println(err)
 		return
 	}
 
-	cmd := exec.Command("dot", "-Tpng", "Inicios de sesión/estudiantes.dot", "-o", "Inicios de sesión/estudiantes.png")
-	if err = cmd.Run(); err != nil {
-		fmt.Println("Error al generar imagen de grafo:", err)
+	// Generar el gráfico con Graphviz
+	cmd := exec.Command("dot", "-Tpng", "Estudiantes en cola/queue.dot", "-o", "Estudiantes en cola/queue.png")
+	err = cmd.Run()
+	if err != nil {
+		fmt.Println(err)
 		return
 	}
+	fmt.Println("Archivo de imagen generado en queue.png")
 }
 
-// Graphviz para pila de inicio de sesión
+// Graphviz para pila de aprobación de estudiantes
 func generateGraph2(s2 Stack2) {
 	f, err := os.Create("Aprobación de estudiantes/admin.dot")
 	if err != nil {
@@ -178,47 +138,89 @@ func generateGraph2(s2 Stack2) {
 	}
 }
 
-func (q *Queue) ToGraphviz() {
-	if len(*q) == 0 {
-		fmt.Println("La cola está vacía")
+// Graphviz para pila de inicio de sesión
+func generateGraph(s Stack) {
+	f, err := os.Create("Inicios de sesión/estudiantes.dot")
+	if err != nil {
+		fmt.Println("Error al crear archivo de grafo:", err)
+		return
+	}
+	defer f.Close()
+
+	_, err = f.WriteString("digraph {\n")
+	if err != nil {
+		fmt.Println("Error al escribir en archivo de grafo:", err)
 		return
 	}
 
-	// Construir el grafo
-	var b strings.Builder
-	b.WriteString("digraph {\n")
-	b.WriteString("    rankdir=\"TB\";\n")
-	for i, user := range *q {
-		fmt.Fprintf(&b, "    node%d[label=\"%v\"];\n", i, user)
-		if i > 0 {
-			fmt.Fprintf(&b, "    node%d -> node%d;\n", i-1, i)
+	// Escribir nodos
+	_, err = f.WriteString("node [shape=box]\n")
+	if err != nil {
+		fmt.Println("Error al escribir en archivo de grafo:", err)
+		return
+	}
+	_, err = f.WriteString("{rank=same ")
+	if err != nil {
+		fmt.Println("Error al escribir en archivo de grafo:", err)
+		return
+	}
+	for i, v := range s {
+		_, err = f.WriteString(fmt.Sprintf("\"%s\"", v))
+		if err != nil {
+			fmt.Println("Error al escribir en archivo de grafo:", err)
+			return
+		}
+		if i < len(s)-1 {
+			_, err = f.WriteString(" -> ")
+			if err != nil {
+				fmt.Println("Error al escribir en archivo de grafo:", err)
+				return
+			}
 		}
 	}
-	b.WriteString("}")
+	_, err = f.WriteString("}\n")
 
-	// Escribir el archivo .dot
-	dotFile, err := os.Create("Estudiantes en cola/queue.dot")
+	// Escribir conexiones
+	_, err = f.WriteString("edge [dir=none]\n")
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Error al escribir en archivo de grafo:", err)
 		return
 	}
-	defer dotFile.Close()
-	_, err = dotFile.WriteString(b.String())
+	_, err = f.WriteString("{rank=same ")
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Error al escribir en archivo de grafo:", err)
+		return
+	}
+	for i, v := range s {
+		_, err = f.WriteString(fmt.Sprintf("\"%s\"", v))
+		if err != nil {
+			fmt.Println("Error al escribir en archivo de grafo:", err)
+			return
+		}
+		if i < len(s)-1 {
+			_, err = f.WriteString(" -> ")
+			if err != nil {
+				fmt.Println("Error al escribir en archivo de grafo:", err)
+				return
+			}
+		}
+	}
+	_, err = f.WriteString("}\n")
+
+	_, err = f.WriteString("}\n")
+	if err != nil {
+		fmt.Println("Error al escribir en archivo de grafo:", err)
 		return
 	}
 
-	// Generar el gráfico con Graphviz
-	cmd := exec.Command("dot", "-Tpng", "Estudiantes en cola/queue.dot", "-o", "Estudiantes en cola/queue.png")
-	err = cmd.Run()
-	if err != nil {
-		fmt.Println(err)
+	cmd := exec.Command("dot", "-Tpng", "Inicios de sesión/estudiantes.dot", "-o", "Inicios de sesión/estudiantes.png")
+	if err = cmd.Run(); err != nil {
+		fmt.Println("Error al generar imagen de grafo:", err)
 		return
 	}
-	fmt.Println("Archivo de imagen generado en queue.png")
 }
 
+// Graphviz para lista doblemente enlazada
 func (dll *DoublyLinkedList) ToGraphviz2() error {
 	// Abrir el archivo de salida
 	f, err := os.Create("Lista doble/lista.dot")
