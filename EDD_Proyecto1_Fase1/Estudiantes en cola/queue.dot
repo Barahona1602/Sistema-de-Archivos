@@ -1,8 +1,4 @@
 digraph {
     rankdir="TB";
-    node0[label="{Ebany Larios 201403877 qwerty12}"];
-    node1[label="{Silverio Rodriguez 202203123 sadfas}"];
-    node0 -> node1;
-    node2[label="{Roberto Osorio 202100100 tucontra}"];
-    node1 -> node2;
+    node0[label="{a a a a}"];
 }

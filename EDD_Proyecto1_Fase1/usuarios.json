@@ -1,20 +1,16 @@
-[
-  {
-    "carnet": "201780044",
-    "carpeta_raiz": "/",
-    "contraseña": "leo1234",
-    "nombre": "Leonardo Martinez"
-  },
-  {
-    "carnet": "201709018",
-    "carpeta_raiz": "/",
-    "contraseña": "cris1234",
-    "nombre": "Cristian Suy"
-  },
-  {
-    "carnet": "202110770",
-    "carpeta_raiz": "/",
-    "contraseña": "12345",
-    "nombre": "Canelo Huertas"
-  }
-]
+{
+  "alumnos": [
+    {
+      "nombre": "1 1",
+      "carnet": "1",
+      "contraseña": "1",
+      "carpeta_raiz": "/"
+    },
+    {
+      "nombre": "a a",
+      "carnet": "a",
+      "contraseña": "a",
+      "carpeta_raiz": "/"
+    }
+  ]
+}
