@@ -31,4 +31,5 @@ También se pueden visualizar 4 carpetas: las cuales guardan los reportes en gra
 - Lista doble: Este contiene la información de los estudiantes aprobados.
 
 En resumen, podremos ver todos estos archivos que se muestran a continuación:
+
 ![image](https://user-images.githubusercontent.com/98893615/221267288-acc7eb4f-0a39-46f7-883b-33b966820379.png)
