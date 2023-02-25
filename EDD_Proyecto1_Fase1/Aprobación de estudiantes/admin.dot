@@ -2,8 +2,8 @@ digraph {
 rankdir=LR;
 node [shape=box]
 {rank=same "Se aprobó a Estudiante
-24/02/2023 16:04:41"}
+25/02/2023 11:38:42"}
 edge [dir=none]
 {rank=same "Se aprobó a Estudiante
-24/02/2023 16:04:41"}
+25/02/2023 11:38:42"}
 }

@@ -42,72 +42,55 @@ func menuInicioSesion(dll *DoublyLinkedList) {
 		fmt.Println("* * * * * * * * * * * * * * * * * * * * * *")
 		fmt.Print("Ingrese una opción: ")
 		var opcion int
-		_, err := fmt.Scan(&opcion)
-		if err != nil {
-			fmt.Println("Error al leer la entrada del usuario.")
-			continue
-		}
-		if opcion == 2 {
-			os.Exit(0)
-		} else if opcion != 1 {
-			fmt.Println("Opción inválida.")
-			continue
-		}
-		fmt.Print("Ingresa tu usuario: ")
-		_, err = fmt.Scan(&carnet)
-		if err != nil {
-			fmt.Println("Error al leer la entrada del usuario.")
-			continue
-		}
-		if carnet == "admin" {
-			fmt.Print("Ingresa tu contraseña: ")
-			_, err := fmt.Scan(&contrasenia)
-			if err != nil {
-				fmt.Println("Error al leer la entrada del usuario.")
+		_, _ = fmt.Scan(&opcion)
+		switch opcion {
+		case 1:
+			fmt.Print("Ingresa tu usuario: ")
+			_, _ = fmt.Scan(&carnet)
+			if carnet == "admin" {
+				fmt.Print("Ingresa tu contraseña: ")
+				_, _ = fmt.Scan(&contrasenia)
+				if contrasenia == "admin" {
+					fmt.Println("Bienvenido admin")
+					now := time.Now()
+					var hora string = now.Format("02/01/2006 15:04:05")
+					s.Push("admin", "", hora, carnet)
+					admin()
+					continue
+				} else {
+					fmt.Println("Contraseña incorrecta.")
+					continue
+				}
+			}
+			userNode = dll.BuscarUsuario(carnet)
+			if userNode == nil {
+				fmt.Println("Usuario no encontrado.")
 				continue
 			}
-			if contrasenia == "admin" {
-				fmt.Println("Bienvenido admin")
-				now := time.Now()
-				var hora string = now.Format("02/01/2006 15:04:05")
-				s.Push("admin", "", hora, carnet)
-				admin()
-				continue
-			} else {
+			fmt.Print("Ingresa tu contraseña: ")
+			_, _ = fmt.Scan(&contrasenia)
+			if contrasenia != userNode.user.contraseña {
 				fmt.Println("Contraseña incorrecta.")
 				continue
+			} else {
+				fmt.Printf("Bienvenido, %s %s.\n", userNode.user.nombre, userNode.user.apellido)
+				now := time.Now()
+				var hora string = now.Format("02/01/2006 15:04:05")
+				s.Push(userNode.user.nombre, userNode.user.apellido, hora, carnet)
+				fmt.Print("¿Desea salir? (y/n)")
+				var opcion2 string
+				fmt.Scan(&opcion2)
+				if opcion2 == "y" {
+					menuInicioSesion(dll)
+				}
+				if opcion2 == "n" {
+					standby()
+				}
 			}
-		}
-		userNode = dll.BuscarUsuario(carnet)
-		if userNode == nil {
-			fmt.Println("Usuario no encontrado.")
-			continue
-		}
-		fmt.Print("Ingresa tu contraseña: ")
-		_, err = fmt.Scan(&contrasenia)
-		if err != nil {
-			fmt.Println("Error al leer la entrada del usuario.")
-			continue
-		}
-		if contrasenia != userNode.user.contraseña {
-			fmt.Println("Contraseña incorrecta.")
-			continue
-		} else {
-			fmt.Printf("Bienvenido, %s %s.\n", userNode.user.nombre, userNode.user.apellido)
-			now := time.Now()
-			var hora string = now.Format("02/01/2006 15:04:05")
-
-			s.Push(userNode.user.nombre, userNode.user.apellido, hora, carnet)
-
-			fmt.Print("¿Desea salir? (y/n)")
-			var opcion2 string
-			fmt.Scan(&opcion2)
-			if opcion2 == "y" {
-				menuInicioSesion(dll)
-			}
-			if opcion2 == "n" {
-				standby()
-			}
+		case 2:
+			os.Exit(0)
+		default:
+			fmt.Println("Opción inválida.")
 		}
 	}
 }

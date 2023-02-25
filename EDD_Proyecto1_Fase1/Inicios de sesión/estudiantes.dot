@@ -3,10 +3,16 @@ node [shape=box]
 {rank=same "admin
 admin 
 Se inició sesión:
-24/02/2023 16:03:42"}
+25/02/2023 11:38:10" -> "1
+1 1
+Se inició sesión:
+25/02/2023 11:38:50"}
 edge [dir=none]
 {rank=same "admin
 admin 
 Se inició sesión:
-24/02/2023 16:03:42"}
+25/02/2023 11:38:10" -> "1
+1 1
+Se inició sesión:
+25/02/2023 11:38:50"}
 }
