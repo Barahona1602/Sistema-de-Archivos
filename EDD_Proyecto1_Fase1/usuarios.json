@@ -1,9 +1,51 @@
 {
   "alumnos": [
     {
-      "nombre": "1 1",
-      "carnet": "1",
-      "contraseña": "1",
+      "nombre": "Ebany Larios",
+      "carnet": "201403877",
+      "contraseña": "qwerty12",
+      "carpeta_raiz": "/"
+    },
+    {
+      "nombre": "Manolo Ramirez",
+      "carnet": "201503933",
+      "contraseña": "Manolo93",
+      "carpeta_raiz": "/"
+    },
+    {
+      "nombre": "Cristian Suy",
+      "carnet": "201700918",
+      "contraseña": "Cris123",
+      "carpeta_raiz": "/"
+    },
+    {
+      "nombre": "Moises Conde",
+      "carnet": "202000127",
+      "contraseña": "Moises18",
+      "carpeta_raiz": "/"
+    },
+    {
+      "nombre": "Jorge Zamora",
+      "carnet": "202002591",
+      "contraseña": "Jorge33",
+      "carpeta_raiz": "/"
+    },
+    {
+      "nombre": "Steven Mejia",
+      "carnet": "202104160",
+      "contraseña": "Steven18",
+      "carpeta_raiz": "/"
+    },
+    {
+      "nombre": "Pablo Barahona",
+      "carnet": "202109715",
+      "contraseña": "Pablo42",
+      "carpeta_raiz": "/"
+    },
+    {
+      "nombre": "Javier Pablo",
+      "carnet": "201944766",
+      "contraseña": "Javier99",
       "carpeta_raiz": "/"
     }
   ]

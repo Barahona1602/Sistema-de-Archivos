@@ -1,6 +1,27 @@
 digraph G {
   node [shape=box];
   rankdir=LR;
-  1 [label="1 1
-1"];
+  201403877 [label="Ebany Larios
+201403877"];
+  201503933 [label="Manolo Ramirez
+201503933"];
+  201700918 [label="Cristian Suy
+201700918"];
+  201944766 [label="Javier Pablo
+201944766"];
+  202000127 [label="Moises Conde
+202000127"];
+  202002591 [label="Jorge Zamora
+202002591"];
+  202104160 [label="Steven Mejia
+202104160"];
+  202109715 [label="Pablo Barahona
+202109715"];
+  201403877 -> 201503933 [dir=both];
+  201503933 -> 201700918 [dir=both];
+  201700918 -> 201944766 [dir=both];
+  201944766 -> 202000127 [dir=both];
+  202000127 -> 202002591 [dir=both];
+  202002591 -> 202104160 [dir=both];
+  202104160 -> 202109715 [dir=both];
 }

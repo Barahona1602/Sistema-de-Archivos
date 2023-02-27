@@ -46,7 +46,6 @@ func (q *Queue) ToGraphviz() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println("Archivo de imagen generado en queue.png")
 }
 
 // Graphviz para pila de aprobación de estudiantes

@@ -159,6 +159,7 @@ func admin() {
 					copy(queue[index-1:], queue[index:])
 					queue = queue[:len(queue)-1]
 					queue.ToGraphviz()
+					doublyLinkedList.OrdenarPorCarnet()
 					doublyLinkedList.ToGraphviz2()
 					now2 := time.Now()
 					var hora string = now2.Format("02/01/2006 15:04:05")
@@ -171,7 +172,6 @@ func admin() {
 		case 2:
 			fmt.Println("Ha seleccionado la opción 2")
 			fmt.Println("Los usuarios aprobados en el sistema son:")
-			doublyLinkedList.OrdenarPorCarnet()
 			for node := doublyLinkedList.head; node != nil; node = node.next {
 				fmt.Printf("Nombre: %s, Apellido: %s, Carnet: %s, Contraseña: %s\n", node.user.nombre, node.user.apellido, node.user.carnet, node.user.contraseña)
 			}
@@ -263,8 +263,9 @@ func admin() {
 					contraseña,
 				}
 				queue.Enqueue(user)
-				fmt.Println("Se agregaron los usuarios correctamente")
+
 			}
+			fmt.Println("Se agregaron los usuarios correctamente")
 
 			// Cerrar sesión
 		case 5:
