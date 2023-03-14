@@ -2,22 +2,18 @@ digraph {
 rankdir=LR;
 node [shape=box]
 {rank=same "Se aprobó a Estudiante
-27/02/2023 16:15:08" -> "Se aprobó a Estudiante
-27/02/2023 16:15:15""Se aprobó a Estudiante
-27/02/2023 16:15:21""Se aprobó a Estudiante
-27/02/2023 16:15:25""Se aprobó a Estudiante
-27/02/2023 16:15:38""Se aprobó a Estudiante
-27/02/2023 16:18:39""Se aprobó a Estudiante
-27/02/2023 16:19:04""Se aprobó a Estudiante
-27/02/2023 16:19:26"}
+28/02/2023 14:17:04""Se aprobó a Estudiante
+28/02/2023 14:18:23""Se aprobó a Estudiante
+28/02/2023 14:18:28""Se aprobó a Estudiante
+28/02/2023 14:18:35""Se aprobó a Estudiante
+28/02/2023 14:18:39""Se aprobó a Estudiante
+28/02/2023 14:18:46"}
 edge [dir=none]
 {rank=same "Se aprobó a Estudiante
-27/02/2023 16:15:08" -> "Se aprobó a Estudiante
-27/02/2023 16:15:15" -> "Se aprobó a Estudiante
-27/02/2023 16:15:21" -> "Se aprobó a Estudiante
-27/02/2023 16:15:25" -> "Se aprobó a Estudiante
-27/02/2023 16:15:38" -> "Se aprobó a Estudiante
-27/02/2023 16:18:39" -> "Se aprobó a Estudiante
-27/02/2023 16:19:04" -> "Se aprobó a Estudiante
-27/02/2023 16:19:26"}
+28/02/2023 14:17:04" -> "Se aprobó a Estudiante
+28/02/2023 14:18:23" -> "Se aprobó a Estudiante
+28/02/2023 14:18:28" -> "Se aprobó a Estudiante
+28/02/2023 14:18:35" -> "Se aprobó a Estudiante
+28/02/2023 14:18:39" -> "Se aprobó a Estudiante
+28/02/2023 14:18:46"}
 }

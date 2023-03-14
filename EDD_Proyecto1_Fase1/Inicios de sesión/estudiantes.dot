@@ -3,20 +3,22 @@ node [shape=box]
 {rank=same "admin
 admin 
 Se inició sesión:
-27/02/2023 16:12:57
-27/02/2023 16:17:35" -> "202109715
+28/02/2023 14:16:31" -> "202109715
 Pablo Barahona
 Se inició sesión:
-27/02/2023 16:17:02
-27/02/2023 16:17:23"}
+28/02/2023 14:21:04" -> "201780044
+Leonardo Martinez
+Se inició sesión:
+28/02/2023 14:21:28"}
 edge [dir=none]
 {rank=same "admin
 admin 
 Se inició sesión:
-27/02/2023 16:12:57
-27/02/2023 16:17:35" -> "202109715
+28/02/2023 14:16:31" -> "202109715
 Pablo Barahona
 Se inició sesión:
-27/02/2023 16:17:02
-27/02/2023 16:17:23"}
+28/02/2023 14:21:04" -> "201780044
+Leonardo Martinez
+Se inició sesión:
+28/02/2023 14:21:28"}
 }
