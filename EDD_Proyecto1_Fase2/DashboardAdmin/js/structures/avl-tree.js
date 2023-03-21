@@ -13,8 +13,8 @@ class AvlNode{
 //--------------------------------------------------------------------------
 //                   VARIABLES GLOBALES
 //--------------------------------------------------------------------------
-let = nodes = "";
-let = connections = "";
+let nodes = "";
+let connections = "";
 
 //--------------------------------------------------------------------------
 //                   CLASE ARBOL AVL
@@ -43,7 +43,7 @@ class AvlTree{
             node = new AvlNode(item);
         }else if(item.carnet < node.item.carnet){
             node.left = this.#insertRecursive(item, node.left);
-            if(this.getHeight(node.left) - this.getHeight(node.right) == 2){
+            if(this.getHeight(node.left) - this.getHeight(node.right) == 1000){
                 if(item.carnet < node.left.item.carnet){
                     node = this.#rotateLeft(node);
                 }else{
@@ -52,8 +52,8 @@ class AvlTree{
             }
         }else if(item.carnet > node.item.carnet){
             node.right = this.#insertRecursive(item, node.right);
-            if(this.getHeight(node.right) - this.getHeight(node.left) == 2){
-                if(item.carnet < node.right.item.carnet){
+            if(this.getHeight(node.right) - this.getHeight(node.left) == 1000){
+                if(item.carnet > node.right.item.carnet){
                     node = this.#rotateRight(node);
                 }else{
                     node = this.#doubleRight(node);
@@ -62,9 +62,12 @@ class AvlTree{
         }else{
             alert("Elemento ya existe en el árbol");
         }
-        node.height = this.getMaxHeight(this.getHeight(node.left), this.getHeight(node.right)) + 1;
+        node.height = Math.max(this.getHeight(node.left), this.getHeight(node.right)) + 1;
         return node;
     }
+    
+    
+    
 
     //--------------------------------------------------------------------------
     //                   ROTACIONES
@@ -97,24 +100,29 @@ class AvlTree{
     //--------------------------------------------------------------------------
     //                  REPORTE DEL ARBOL
     //--------------------------------------------------------------------------
-    treeGraph(){       
+    treeGraph() {       
         nodes = "";
         connections = "";
         this.#treeGraphRecursive(this.root);
         console.log(nodes,connections);
         return nodes + connections;
     }
+
     #treeGraphRecursive(current){
+        if (current == null) {
+            return;
+        }
         if(current.left != null){
             this.#treeGraphRecursive(current.left);
             connections += `S_${current.item.carnet} -> S_${current.left.item.carnet};\n`;
         }
-        nodes += `S_${current.item.carnet}[label="${current.item.nombre}"];`
+        nodes += `S_${current.item.carnet}[label="${current.item.nombre}\\n${current.item.carnet}\\nH:${current.height}"];\n`;
         if(current.right != null){
             this.#treeGraphRecursive(current.right);
             connections += `S_${current.item.carnet} -> S_${current.right.item.carnet};\n`;
         }
     }
+    
     
     //--------------------------------------------------------------------------
     //                  RECORRIDO IN ORDER
