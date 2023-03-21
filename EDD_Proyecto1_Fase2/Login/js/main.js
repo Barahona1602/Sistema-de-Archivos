@@ -2,7 +2,6 @@
 [ Validate ]*/
 var input = $('.validate-input .input100');
 
-
 $('.validate-form').on('submit', function (e) {
     e.preventDefault();
     var check = true;
