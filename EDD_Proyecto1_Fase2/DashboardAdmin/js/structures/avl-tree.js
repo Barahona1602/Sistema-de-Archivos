@@ -60,7 +60,7 @@ class AvlTree{
                 }
             }
         }else{
-            alert("Elemento ya existe en el árbol");
+            swal("El estudiante ya fue cargado");
         }
         node.height = Math.max(this.getHeight(node.left), this.getHeight(node.right)) + 1;
         return node;
@@ -116,7 +116,7 @@ class AvlTree{
             this.#treeGraphRecursive(current.left);
             connections += `S_${current.item.carnet} -> S_${current.left.item.carnet};\n`;
         }
-        nodes += `S_${current.item.carnet}[label="${current.item.nombre}\\n${current.item.carnet}\\nH:${current.height}"];\n`;
+        nodes += `S_${current.item.carnet}[label="${current.item.nombre}\\n${current.item.carnet}\\nAltura:${current.height}"];\n`;
         if(current.right != null){
             this.#treeGraphRecursive(current.right);
             connections += `S_${current.item.carnet} -> S_${current.right.item.carnet};\n`;

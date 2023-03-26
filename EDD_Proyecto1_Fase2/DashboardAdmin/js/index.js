@@ -34,14 +34,40 @@ function loadStudentsForm(e) {
             var studentsArray = JSON.parse(studentsData);
             console.log(studentsArray);
           }
+          
       }
     } catch(error){
       console.log(error);
-      alert("Error en la inserción");
+      swal("Archivo incorrecto", "Error en la subida de los estudiantes", "warning");
     }
   }
-  
-  
+
+  // CARGAR DATOS DEL LOCAL STORAGE AL RECARGAR LA PÁGINA
+function loadDataFromLocalStorage() {
+  const studentsData = localStorage.getItem('studentsData');
+  if (studentsData) {
+    const studentsArray = JSON.parse(studentsData);
+    $('#studentsTable tbody').html(
+      studentsArray.map((item, index) => {
+        return(`
+          <tr>
+            <th>${item.carnet}</th>
+            <td>${item.nombre}</td>
+            <td>${item.password}</td>
+          </tr>
+        `);
+      }).join('')
+    );
+    for(let i = 0; i < studentsArray.length; i++){
+      avlTree.insert(studentsArray[i]);
+    }
+  }
+}
+
+// EVENTO ONLOAD PARA CARGAR DATOS DEL LOCAL STORAGE AL RECARGAR LA PÁGINA
+window.onload = function() {
+  loadDataFromLocalStorage();
+};
 
 // FUNCIÓN PARA AGREGAR RECORRIDOS
 function showStudentsForm(e){
@@ -84,3 +110,4 @@ function showAvlGraph(){
 function logout() {
   window.location.href = "../Login/login.html";
 }
+

@@ -27,16 +27,21 @@ $('.validate-form').on('submit', function (e) {
                 var carnss=studentsArray[j].carnet.toString()
                 if (carnss === email && studentsArray[j].password === password) {
                     // Redireccionar al estudiante a la página estudiantes.html si se encuentra una coincidencia
-                    //window.location.href = "../estudiantes.html";
-                    alert("Bienvenido " + studentsArray[j].nombre);
+                    window.location.href = "../DashboardUser/users.html";
+                    nombreST=studentsArray[j].nombre;
+                    sessionStorage.setItem('nombreEstudiante', nombreST);
                     return;
                 }
             }
-        alert("Nombre de usuario o contraseña incorrectos");
+            swal("Inicio de sesión", "Usuario o constraseña incorrectos", "warning");
     }
 
     return check;
 });
+
+
+
+
 
 $('.validate-form .input100').each(function () {
     $(this).focus(function () {
