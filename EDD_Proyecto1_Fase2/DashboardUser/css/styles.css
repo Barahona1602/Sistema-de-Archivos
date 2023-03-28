@@ -75,6 +75,7 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Poppins-Bold', sans-serif;
 }
 
+ 
 .btn:hover, .btn:focus {
     background-color: #000;
     border: none;
@@ -83,6 +84,38 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Poppins-Bold', sans-serif;
 }
 
+.folder:hover{
+  background-color: rgb(241, 229, 255);
+  color: rgb(33,37,41);
+  transform: .3s;
+  cursor: pointer;
+  border-radius: 7px;
+}
+
+#carpetas {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start; 
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  flex-wrap: wrap; 
+  flex-basis: 24%; 
+  flex-grow: 0; 
+  box-sizing: border-box; 
+  margin-right: 2%; 
+  margin-bottom: 10px; 
+}
+
+
+.hola {
+  display: flex;
+  align-items: center;
+}
+
+.btn-buscar {
+  margin-right: 10px;
+}
 
 .btn-danger {
     background-color: #dc3545;
@@ -142,7 +175,6 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 20px; 
   margin-right: 20px;
   font-family: 'Montserrat-Medium', sans-serif; 
-  width: 350px;
 }
 .row{
   display: flex;

@@ -1,26 +1,77 @@
 var nombreEstudiante = sessionStorage.getItem('nombreEstudiante');
+
+if (!sessionStorage.getItem('nombreEstudiante')) {
+  Swal.fire({
+    icon: 'warning',
+    title: 'No se ha iniciado sesión',
+    text: 'Por favor, inicia sesión antes de acceder a esta página',
+    allowOutsideClick: false, 
+    timer: 5000,
+    backdrop: `
+      rgba(0,0,0,0.98)
+      center top
+      no-repeat
+    ` 
+  }).then(() => {
+    window.location.href = '../Login/login.html';
+  });
+}
+
+
+
 console.log(nombreEstudiante);
 var nombreUsuario = nombreEstudiante;
 var elementoBienvenido = document.querySelector('h1');
 elementoBienvenido.textContent = "Bienvenido " + nombreUsuario;
+
+
 let tree =  new Tree();
 
 
 function crearCarpeta(e){
-    e.preventDefault();
-    let folderName =  $('#folderName').val();
-    let path =  $('#path').val();
-    tree.insert(folderName, path);
-    $('#carpetas').html(tree.getHTML(path))
+  e.preventDefault();
+  let folderName =  $('#folderName').val();
+  let path =  $('#path').val();
+  if (folderName === '') {
+      Swal.fire({
+          icon: 'warning',
+          title: 'Nombre incorrecto',
+          text: 'Por favor, ingrese un nombre antes de crear la carpeta',
+      });
+  } else {
+      tree.insert(folderName, path);
+      localStorage.setItem('tree'+nombreUsuario, JSON.stringify(tree));
+      $('#carpetas').html(tree.getHTML(path));
+  }
 }
 
-function entrarCarpeta(folderName){
-    let path = $('#path').val();
-    let curretPath = path == '/'? path + folderName : path + "/"+ folderName;
-    console.log(curretPath)
-    $('#path').val(curretPath);
-    $('#carpetas').html(tree.getHTML(curretPath))
+let treeData = JSON.parse(localStorage.getItem('tree'+nombreUsuario));
+if (treeData) {
+  tree = Object.assign(new Tree(), treeData);
+  let path = $('#path').val();
+  $('#carpetas').html(tree.getHTML(path));
 }
+
+
+
+function entrarCarpeta(folderName) {
+  let path = $('#path').val();
+  let currentPath = path == '/' ? path + folderName : path + "/" + folderName;
+  let folderNode = tree.getFolder(currentPath);
+  if (folderNode !== null) {
+    // si se encuentra la carpeta, se actualiza la ruta y se muestra el contenido de la carpeta
+    $('#path').val(currentPath);
+    $('#carpetas').html(tree.getHTML(currentPath));
+  } else {
+    // si no se encuentra la carpeta, se muestra un mensaje de error
+    Swal.fire({
+      icon: 'warning',
+      title: 'Carpeta no encontrada',
+      text: `La carpeta ${folderName} no existe en la ruta ${path}.`,
+    });
+  }
+}
+
 
 function retornarInicio(){
     $('#path').val("/");
@@ -50,6 +101,8 @@ function showGraph(){
 function logout() {
   window.location.href = "../Login/login.html";
 }
+
+
 
 function eliminarCarpeta() {
   let path = $('#path').val();
@@ -130,6 +183,17 @@ function renombreCarpeta() {
       tree.renameFolder(oldPath, newName);
     }
   });
+}
+
+function buscarCarpeta() {
+  let path = $('#path').val();
+
+  // Si la ruta es únicamente '/', no agrega otro '/'
+  if (path === '/') {
+    $('#path').val(path);
+  } else {
+    let result = tree.search(path);
+  }
 }
 
 

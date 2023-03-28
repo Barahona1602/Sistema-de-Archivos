@@ -9,6 +9,7 @@ $('.validate-form').on('submit', function (e) {
     var password = $("input[name='pass']").val();
 
     if(email === "admin" && password === "admin") {
+        sessionStorage.setItem('admin', 'admin');
         window.location.href = "../DashboardAdmin/admin.html";
         return;
     }

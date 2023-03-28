@@ -14,17 +14,43 @@ class Tree{
         this.size = 1; // Para generar los ids
     }
 
-    insert(folderName, fatherPath){ 
-        let newNode =  new Tnode(folderName);
+    insert(folderName, fatherPath) {
         let fatherNode = this.getFolder(fatherPath);
-        if(fatherNode){
-            this.size += 1;
-            newNode.id = this.size;
-            fatherNode.children.push(newNode);
-        }else{
-            console.log("Ruta no existe");
+        if (!fatherNode) {
+          console.log("Ruta no existe");
+          return;
+        }
+      
+        // Busca si el nombre de la carpeta ya existe en los hijos del padre
+        let existingFolderNames = fatherNode.children.map(child => child.folderName);
+        let newName = folderName;
+        let counter = 1;
+        while (existingFolderNames.includes(newName)) {
+          newName = `copia${counter} ${folderName}`;
+          counter++;
+        }
+      
+        let newNode = new Tnode(newName);
+        this.size += 1;
+        newNode.id = this.size;
+        fatherNode.children.push(newNode);
+      }
+
+    search(path) {
+        let node = this.getFolder(path);
+        if (node !== null) {
+            let newPath = path == '/' ? path + node.folderName : path;
+            $('#path').val(newPath);
+            $('#carpetas').html(this.getHTML(newPath));
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Carpeta no encontrada',
+                text: `La ruta ${path} no existe.`,
+            });
         }
     }
+    
 
 
     getFolder(path){
@@ -75,7 +101,7 @@ class Tree{
         let code = "";
         node.children.map(child => {
             code += ` <div class="col-2 folder" onclick="entrarCarpeta('${child.folderName}')">
-                        <img src="./images/icons/folder.png" width="100%"/>
+                        <img src="./images/icons/folder.ico" width="100%"/>
                         <p class="h6 text-center">${child.folderName}</p>
                     </div>`
         })
