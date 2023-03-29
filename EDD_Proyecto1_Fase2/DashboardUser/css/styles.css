@@ -169,6 +169,19 @@ h1, h2, h3, h4, h5, h6 {
     width: 400px;
 }
 
+.scrollable-image {
+  width: 100%; /* establece la anchura deseada */
+  height: auto; /* ajusta la altura automáticamente */
+  overflow: auto; /* permite desplazarse horizontal y verticalmente si la imagen es más grande que la anchura fija */
+}
+
+.scrollable-image img {
+  display: block; /* elimina el espacio en blanco debajo de la imagen */
+  margin: auto; /* centra la imagen horizontalmente */
+}
+
+
+
 .buscador2 {
   padding: 5px;
   border: none;

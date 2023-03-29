@@ -1,5 +1,4 @@
 var nombreEstudiante = sessionStorage.getItem('nombreEstudiante');
-
 if (!sessionStorage.getItem('nombreEstudiante')) {
   Swal.fire({
     icon: 'warning',
@@ -25,7 +24,36 @@ var elementoBienvenido = document.querySelector('h1');
 elementoBienvenido.textContent = "Bienvenido " + nombreUsuario;
 
 
+
+let listaCircular = new CircularLinkedList();
 let tree =  new Tree();
+
+
+function circularToJSON(obj) {
+  const cache = new Set();
+  return JSON.stringify(obj, function(key, value) {
+    if (typeof value === 'object' && value !== null) {
+      if (cache.has(value)) {
+        return undefined;
+      }
+      cache.add(value);
+    }
+    return value;
+  });
+}
+
+function jsonToCircular(json) {
+  const cache = new Map();
+  return JSON.parse(json, function(key, value) {
+    if (typeof value === 'object' && value !== null) {
+      if (cache.has(value)) {
+        return cache.get(value);
+      }
+      cache.set(value, value);
+    }
+    return value;
+  });
+}
 
 
 function crearCarpeta(e){
@@ -39,18 +67,39 @@ function crearCarpeta(e){
           text: 'Por favor, ingrese un nombre antes de crear la carpeta',
       });
   } else {
-      tree.insert(folderName, path);
-      localStorage.setItem('tree'+nombreUsuario, JSON.stringify(tree));
+      let newName = tree.insert(folderName, path);
+      const now = new Date();
+      const year = now.getFullYear(); 
+      const month = (now.getMonth() + 1).toString().padStart(2, '0');
+      const day = now.getDate().toString().padStart(2, '0'); 
+      const hours = now.getHours().toString().padStart(2, '0'); 
+      const minutes = now.getMinutes().toString().padStart(2, '0'); 
+      const seconds = now.getSeconds().toString().padStart(2, '0'); 
+      const date = "Fecha: " + `${day}/${month}/${year}`;
+      const hour = "Hora: " + `${hours}:${minutes}:${seconds}`;
+      var creo = "Se creó carpeta\\n" + newName + "\\n" + date + "\\n" + hour;
+      listaCircular.insert(creo);
+      localStorage.setItem('listaCircular'+nombreUsuario, JSON.stringify(JSON.decycle(listaCircular)));
+      localStorage.setItem('tree'+nombreUsuario, JSON.stringify(tree));    
       $('#carpetas').html(tree.getHTML(path));
   }
 }
 
+
+
+let listaCirData = JSON.retrocycle(JSON.parse(localStorage.getItem('listaCircular'+nombreUsuario)));
+if (listaCirData !== null && listaCirData !== undefined) {
+  listaCircular = Object.assign(new CircularLinkedList(), listaCirData);
+}
+
 let treeData = JSON.parse(localStorage.getItem('tree'+nombreUsuario));
-if (treeData) {
+if (treeData !== null && treeData !== undefined) {
   tree = Object.assign(new Tree(), treeData);
   let path = $('#path').val();
   $('#carpetas').html(tree.getHTML(path));
+  console.log(tree)
 }
+
 
 
 
@@ -137,6 +186,19 @@ function eliminarCarpeta() {
         cancelButtonText: 'Cancelar'
       }).then((result) => {
         if (result.isConfirmed) {
+          const now = new Date();
+          const year = now.getFullYear(); 
+          const month = (now.getMonth() + 1).toString().padStart(2, '0');
+          const day = now.getDate().toString().padStart(2, '0'); 
+          const hours = now.getHours().toString().padStart(2, '0'); 
+          const minutes = now.getMinutes().toString().padStart(2, '0'); 
+          const seconds = now.getSeconds().toString().padStart(2, '0'); 
+          const date = "Fecha: " + `${day}/${month}/${year}`;
+          const hour = "Hora: " + `${hours}:${minutes}:${seconds}`;
+          var creo = "Se eliminó carpeta\\n" + tmp + "\\n" + date + "\\n" + hour;
+          listaCircular.insert(creo);
+          localStorage.setItem('listaCircular'+nombreUsuario, JSON.stringify(JSON.decycle(listaCircular)));
+          localStorage.removeItem('tree' + nombreUsuario + folderName);
           parentNode.children = parentNode.children.filter(child => child !== folderNode);
           $('#path').val(path.split('/').slice(0, -1).join('/'));
           $('#carpetas').html(tree.getHTML($('#path').val()));
@@ -146,6 +208,8 @@ function eliminarCarpeta() {
             'La carpeta ' + tmp + ' ha sido eliminada',
             'success'
           );
+          localStorage.setItem('tree' + nombreUsuario, JSON.stringify(tree));
+          $('#carpetas').html(tree.getHTML(path));
         }
       });
     }
@@ -154,6 +218,7 @@ function eliminarCarpeta() {
 
 
 function renombreCarpeta() {
+  console.log(localStorage.getItem('tree'+nombreUsuario, JSON.stringify(tree)));
   let oldPath = $('#path').val();
 
   // Verificar si hay carpeta seleccionada
@@ -181,14 +246,15 @@ function renombreCarpeta() {
     if (result.isConfirmed) {
       let newName = result.value;
       tree.renameFolder(oldPath, newName);
+      localStorage.setItem('tree'+nombreUsuario, JSON.stringify(tree));
     }
   });
 }
 
+
+
 function buscarCarpeta() {
   let path = $('#path').val();
-
-  // Si la ruta es únicamente '/', no agrega otro '/'
   if (path === '/') {
     $('#path').val(path);
   } else {
@@ -198,4 +264,19 @@ function buscarCarpeta() {
 
 
 
+function showGraphC(){
+  let url = 'https://quickchart.io/graphviz?graph=';
+  let body;
+  
+  if(listaCircular.length === 0){
+    Swal.fire({
+      icon: 'info',
+      title: 'Sin acciones',
+      text: 'No se han realizado acciones en el sistema',
+    });
+  } else {
+    body = `${listaCircular.generateGraph()}`;
+    $("#graph4").attr("src", url + body);
+  }
+}
 

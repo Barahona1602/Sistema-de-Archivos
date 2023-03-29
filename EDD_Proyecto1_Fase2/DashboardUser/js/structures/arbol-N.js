@@ -1,17 +1,18 @@
 class Tnode{
     constructor(folderName){
         this.folderName = folderName;
-        this.children = []; // TODOS LOS NODOS HIJOS
-        this.id = null; // PARA GENERAR LA GRÁFICA
+        this.children = []; 
+        this.id = null; 
     }
 }
 
 
 class Tree{
+
     constructor(){
         this.root = new Tnode('/');
         this.root.id = 0;
-        this.size = 1; // Para generar los ids
+        this.size = 1; 
     }
 
     insert(folderName, fatherPath) {
@@ -21,7 +22,6 @@ class Tree{
           return;
         }
       
-        // Busca si el nombre de la carpeta ya existe en los hijos del padre
         let existingFolderNames = fatherNode.children.map(child => child.folderName);
         let newName = folderName;
         let counter = 1;
@@ -34,7 +34,11 @@ class Tree{
         this.size += 1;
         newNode.id = this.size;
         fatherNode.children.push(newNode);
+      
+        return newName; 
       }
+      
+
 
     search(path) {
         let node = this.getFolder(path);
@@ -132,4 +136,6 @@ class Tree{
           console.log('La carpeta no existe');
         }
       }
+    
+    
 }

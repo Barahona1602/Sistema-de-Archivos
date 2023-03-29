@@ -61,18 +61,26 @@
             <hr>
                 <div class="form-group mt-4">
                     <a onclick="showGraph()" class="btn btn-primary w-100 mt-3">Reporte de Carpetas</a>
-                    <a onclick="showAvlGraph()" class="btn btn-primary w-100 mt-3">Reporte de Archivos</a>
+                    <a onclick="showGraphMD()" class="btn btn-primary w-100 mt-3">Reporte de Archivos</a>
+                    <a onclick="showGraphC()" class="btn btn-primary w-100 mt-3">Bitácora</a>
                 </div>
         </div>
-        <div class="container mt-5">
+        <div class="mt-5">
             <h1>Reporte de Carpetas</h1>
             <hr>
             <img id="graph2">
         </div>
-        <div class="container mt-5">
+        <div class=" mt-5">
             <h1>Reporte de Archivos</h1>
             <hr>
             <img id="graph3">
+        </div>
+        <div class="bita mt-5">
+            <h1>Reporte de Bitácora</h1>
+            <hr>
+            <div class="scrollable-image">
+                <img id="graph4">
+            </div>
         </div>
 
 
@@ -92,9 +100,11 @@
     integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" 
     crossorigin="anonymous"></script>
 
- 
+    <!-- Librerias-->
+    <script src="./js/lib/cycle.js"></script>
     <!-- Importar Estructuras -->
     <script src="./js/structures/arbol-N.js"></script>
+    <script src="./js/structures/listaCircular.js"></script>
     <!-- Importar Archivo Principal -->
     <script src="./js/users.js"></script>
 
