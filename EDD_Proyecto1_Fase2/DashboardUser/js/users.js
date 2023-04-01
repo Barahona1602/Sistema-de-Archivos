@@ -82,7 +82,7 @@ if (treeData !== null && treeData !== undefined) {
   tree = Object.assign(new Tree(), treeData);
   let path = $("#path").val();
   $("#carpetas").html(tree.getHTML(path));
-  console.log(tree);
+  //console.log(tree);
 }
 
 
@@ -126,7 +126,7 @@ function darPermiso() {
   tree.insertarDatosMD(archivo, carnet, permiso, path)
   //matrix.insertarMD(archivo, carnet, permiso);
   //console.log(lastElement);
-  console.log(tree.matrixGrpah(path));
+  // console.log(tree.matrixGrpah(path));
   console.log(`Archivo seleccionado: ${archivo}`);
   console.log(`Carnet seleccionado: ${carnet}`);
   console.log(`Permiso seleccionado: ${permiso}`);

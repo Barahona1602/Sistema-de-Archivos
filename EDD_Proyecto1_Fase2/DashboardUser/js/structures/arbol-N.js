@@ -13,6 +13,8 @@ class Tree {
     this.root = new Tnode("/");
     this.root.id = 0;
     this.size = 1;
+    this.currentNode = this.root; // referencia al nodo actual
+    this.contador = 0; // contador
     
   }
 
@@ -44,7 +46,13 @@ class Tree {
 
   insertarDatosMD(carnet, archivos, permiso, folderPath) {
     let temp = this.getFolder(folderPath)
-    temp.matrizD.insertarMD(carnet, archivos, permiso)
+    if (this.currentNode !== temp) { // si es un nodo diferente
+      this.contador = 0; // reinicia el contador
+      this.currentNode = temp; // actualiza el nodo actual
+      temp.matrizD = new SparseMatrix(temp.folderName);
+    }
+    temp.matrizD.insertarMD(carnet, archivos, permiso);
+    this.contador += 1;
   }
   
 

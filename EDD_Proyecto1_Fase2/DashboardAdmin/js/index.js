@@ -131,19 +131,13 @@ function showStudentsForm(e){
   if(avlTree.root !== null){
     switch(form.traversal){
       case 'inOrder':
-        $('#studentsTable tbody').html(
-          avlTree.inOrder()
-        )
+          inOrder()
         break;
       case 'preOrder':
-        $('#studentsTable tbody').html(
-          avlTree.preOrder()
-        )
+        preOrder()
         break;
       case 'postOrder':
-        $('#studentsTable tbody').html(
-          avlTree.postOrder()
-        )
+        postOrder()
         break;
       default:
         $('#studentsTable tbody').html("")
@@ -155,8 +149,7 @@ function showStudentsForm(e){
 // FUNCIÓN PARA GRAPHVIZ
 function showAvlGraph(){
   let url = 'https://quickchart.io/graphviz?graph=';
-  let body = `digraph G { ${avlTree.treeGraph()} }`
-  console.log(body);
+  let body = `digraph G { ${avlTree.graph()} }`
   $("#graph").attr("src", url + body);
 }
 
@@ -164,3 +157,61 @@ function showAvlGraph(){
 function logout() {
   window.location.href = "../Login/login.html";
 }
+
+function inOrder(){
+  let nodos = avlTree.inOrder();
+
+  // Agregar cada item en una fila de la tabla HTML
+  let tableBody = document.querySelector('#studentsTable tbody');
+  let row = "";
+  for (let i = 0; i < nodos.length; i++) {
+      let current = nodos[i];
+      row += `
+          <tr>
+              <th>${current.item.carnet}</th>
+              <td>${current.item.nombre}</td>
+              <td>${current.item.password}</td>
+          </tr>
+      `;
+  }
+  tableBody.innerHTML = row;
+}
+
+function postOrder(){
+  let nodos = avlTree.postOrder();
+
+  // Agregar cada item en una fila de la tabla HTML
+  let tableBody = document.querySelector('#studentsTable tbody');
+  let row = "";
+  for (let i = 0; i < nodos.length; i++) {
+      let current = nodos[i];
+      row += `
+          <tr>
+              <th>${current.item.carnet}</th>
+              <td>${current.item.nombre}</td>
+              <td>${current.item.password}</td>
+          </tr>
+      `;
+  }
+  tableBody.innerHTML = row;
+}
+
+function preOrder(){
+  let nodos = avlTree.preOrder();
+
+  // Agregar cada item en una fila de la tabla HTML
+  let tableBody = document.querySelector('#studentsTable tbody');
+  let row = "";
+  for (let i = 0; i < nodos.length; i++) {
+      let current = nodos[i];
+      row += `
+          <tr>
+              <th>${current.item.carnet}</th>
+              <td>${current.item.nombre}</td>
+              <td>${current.item.password}</td>
+          </tr>
+      `;
+  }
+  tableBody.innerHTML = row;
+}
+

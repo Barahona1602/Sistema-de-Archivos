@@ -18,8 +18,8 @@ class Mnode{
 // CLASE  MATRIZ DISPERSA
 class SparseMatrix{
 
-    constructor(){
-        this.head =  new Mnode(-1, -1, "Carpeta");
+    constructor(hola){
+        this.head =  new Mnode(-1, -1, hola);
     }
     
     insertarMD(x, y, value){
@@ -37,7 +37,7 @@ class SparseMatrix{
 
     graphMD(){
         let code = "graph [nodesep=\"0.8\", ranksep=\"0.6\"]; \n";
-		code +="M0[ label = \"Inicio\" width = 1.5 shape = \"square\" style = \"filled\" fillcolor =\"slateblue\" group=\"0\"]; \n";
+		code +="M0[ label = \""+this.head.value+"\" width = 1.5 shape = \"square\" group=\"0\"]; \n";
         code += this.#headersGraph()
         code += this.#nodesGraph()
         //console.log(code)
@@ -217,7 +217,7 @@ class SparseMatrix{
         let temp = null;
         try { temp = this.head.right } catch (error) { temp = null; console.log("GRAPH"); }
         while(temp != null){
-            nodes += '"' + temp.value +'"' + `[label="${temp.value}" width = 1.5 shape ="square" style="filled" fillcolor="skyblue3" group = "${temp.value}" ];\n`
+            nodes += '"' + temp.value +'"' + `[label="${temp.value}" width = 1.5 shape ="square" group = "${temp.value}" ];\n`
             rank += '"' + temp.value+ '"' + ";";
             if(temp.right != null){
                 conn += '"' + temp.value + '"' + "->";
@@ -230,7 +230,7 @@ class SparseMatrix{
         conn += 'M0 ->';
         try { temp = this.head.down } catch (error) { temp = null; console.log("GRAPH"); }
         while(temp != null){
-            nodes += '"'+ temp.value+'"' + `[label="${temp.value}" width = 1.5 shape ="square" style="filled" fillcolor="skyblue3" group="0"];\n`
+            nodes += '"'+ temp.value+'"' + `[label="${temp.value}" width = 1.5 shape ="square" group="0"];\n`
             if(temp.down != null){
                 conn +=  '"'+ temp.value+'"' + "->";
             }else{
@@ -242,7 +242,7 @@ class SparseMatrix{
         rank += "}";
         return nodes +"\n"+ conn +"\n"+ rank +"\n";
     }
-
+    
     #nodesGraph(){
         let conn = "";
         let nodes = "";
@@ -254,7 +254,7 @@ class SparseMatrix{
             try { ty = tx.right } catch (error) { ty = null; console.log("errorX2"); } 
             conn += `"${ty.x}" -> `
             while(ty != null){
-                nodes += `"${ty.x}_${ty.y}"[label="${ty.value}" width=1.5 shape="square" style="filled" fillcolor="slategray1" group="${ty.y}"];\n`
+                nodes += `"${ty.x}_${ty.y}"[label="${ty.value}" width=1.5 shape="square" group="${ty.y}"];\n`
                 rank += `{rank=same; "${ty.x}"; "${ty.x}_${ty.y}";}\n`;
                 if(ty.right != null){
                     conn += `"${ty.x}_${ty.y}" ->`;
@@ -283,4 +283,4 @@ class SparseMatrix{
         }
         return nodes + "\n" + rank + "\n" + conn;
     }
-}
+}    

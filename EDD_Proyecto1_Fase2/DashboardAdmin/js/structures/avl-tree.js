@@ -1,209 +1,151 @@
-//--------------------------------------------------------------------------
-//                      CLASE NODO
-//--------------------------------------------------------------------------
 class AvlNode {
     constructor(item) {
-      this.item = item;
-      this.left = null;
-      this.right = null;
-      this.height = 1;
+        this.item = item;
+        this.left = null;
+        this.right = null;
+        this.height = 1;
     }
-  }
-  
-  //--------------------------------------------------------------------------
-  //                   VARIABLES GLOBALES
-  //--------------------------------------------------------------------------
-  let nodes = "";
-  let connections = "";
-  
-  //--------------------------------------------------------------------------
-  //                   CLASE ARBOL AVL
-  //--------------------------------------------------------------------------
-  class AvlTree {
+}
+
+class AvlTree {
     constructor() {
-      this.root = null;
+        this.root = null;
     }
-  
-    insert(item) {
-      let nuevoNodo = new AvlNode(item);
-      this.root = this.#insertRecursive(this.root, nuevoNodo);
-    }
-  
+
     height(node) {
-      return node ? node.height : 0;
-    }
-  
-    getMaxHeight(nodo) {
-        if (!nodo) {
-          return 0;
-        }
-        return this.height(nodo.left) - this.height(nodo.right);
-      }
-      
-  
-    //--------------------------------------------------------------------------
-    //                  METODO DE INSERCIÓN
-    //--------------------------------------------------------------------------
-    #insertRecursive(nuevoNodo, nodo) {
-      if (!nodo) {
-        return nuevoNodo;
-      }
-      if (nuevoNodo.item.carnet < nodo.item?.carnet) {
-        nodo.left = this.#insertRecursive(nuevoNodo, nodo.left);
-      } else if (nuevoNodo.item.carnet > nodo.item?.carnet) {
-        nodo.right = this.#insertRecursive(nuevoNodo, nodo.right);
-      } else {
-        // Si el carnet ya existe, no se inserta el nuevo nodo
-        return nodo;
-      }
-      
-      nodo.height = this.getMaxHeight(nodo.left, nodo.right) + 1;
-      return this.#balancear(nodo);
-    }
-  
-    //--------------------------------------------------------------------------
-    //                   ROTACIONES
-    //--------------------------------------------------------------------------
-    #rotateRight(nodo) {
-        let nodoLeft = nodo.left;
-        if (!nodoLeft) {
-          return nodo;
-        }
-        nodo.left = nodoLeft.right;
-        nodoLeft.right = nodo;
-        nodo.height = this.height(nodo.left, nodo.right) + 1;
-        nodoLeft.height = this.height(nodoLeft.left, nodoLeft.right) + 1;
-        return nodoLeft;
-      }
-      
-  
-    #rotateLeft(nodo) {
-      let nodoRight = nodo.right;
-      nodo.right = nodoRight.left;
-      nodoRight.left = nodo;
-      nodo.height = this.height(nodo.left, nodo.right) + 1;
-      nodoRight.height = this.height(nodoRight.left, nodoRight.right) + 1;
-      return nodoRight;
+        return node ? node.height : 0;
     }
 
-    #balancear(nodo) {
-        let factorBalance = this.getMaxHeight(nodo);
-        if (factorBalance > 1) {
-            if (this.getMaxHeight(nodo.left) < 0) {
-                nodo.left = this.#rotateLeft(nodo.left);
+    balanceFactor(node) {
+        return this.height(node.left) - this.height(node.right);
+    }
+
+    balanceRecursive(node) {
+        let balanceFactor = this.balanceFactor(node);
+        if (balanceFactor > 1) {
+            if (this.balanceFactor(node.left) < 0) {
+                node.left = this.rotateLeft(node.left);
             }
-            return this.#rotateRight(nodo);
-        } else if (factorBalance < -1) {
-            if (this.getMaxHeight(nodo.right) > 0) {
-                nodo.right = this.#rotateRight(nodo.right);
+            return this.rotateRight(node);
+        } else if (balanceFactor < -1) {
+            if (this.balanceFactor(node.right) > 0) {
+                node.right = this.rotateRight(node.right);
             }
-            return this.#rotateLeft(nodo);
+            return this.rotateLeft(node);
         } else {
-            return nodo;
+            return node;
         }
     }
 
-    //--------------------------------------------------------------------------
-    //                  REPORTE DEL ARBOL
-    //--------------------------------------------------------------------------
-    treeGraph() {       
-        nodes = "";
-        connections = "";
-        this.#treeGraphRecursive(this.root);
-        console.log(nodes,connections);
-        return nodes + connections;
+    rotateLeft(node) {
+        let nodoright = node.right;
+        node.right = nodoright.left;
+        nodoright.left = node;
+        node.height = Math.max(this.height(node.left), this.height(node.right)) + 1;
+        nodoright.height = Math.max(this.height(nodoright.left), this.height(nodoright.right)) + 1;
+        return nodoright;
     }
 
-    #treeGraphRecursive(current){
-        if (current == null) {
-            return;
-        }
-        if(current.left != null){
-            this.#treeGraphRecursive(current.left);
-            connections += `S_${current.item.carnet} -> S_${current.left.item.carnet};\n`;
-        }
-        nodes += `S_${current.item.carnet}[label="${current.item.nombre}\\n${current.item.carnet}\\nAltura:${current.height}"];\n`;
-        if(current.right != null){
-            this.#treeGraphRecursive(current.right);
-            connections += `S_${current.item.carnet} -> S_${current.right.item.carnet};\n`;
-        }
-    }
-    
-    
-    
-    //--------------------------------------------------------------------------
-    //                  RECORRIDO IN ORDER
-    //--------------------------------------------------------------------------
-    inOrder(){
-        let html = this.#inOrderRecursive(this.root);
-        return html;
-    }
-    #inOrderRecursive(current){
-        let row = "";
-        if(current.left != null){
-            row += this.#inOrderRecursive(current.left);
-        }
-        row +=`
-            <tr>
-                <th>${current.item.carnet}</th>
-                <td>${current.item.nombre}</td>
-                <td>${current.item.password}</td>
-            </tr>
-        `;
-        if(current.right != null){
-            row += this.#inOrderRecursive(current.right);
-        }
-        return row;
-    }
-    //--------------------------------------------------------------------------
-    //                  RECORRIDO PRE ORDER
-    //--------------------------------------------------------------------------
-    preOrder(){
-        let html = this.#preOrderRecursive(this.root);
-        return html;
-    }
-    #preOrderRecursive(current){
-        let row = "";
-        row +=`
-            <tr>
-                <th>${current.item.carnet}</th>
-                <td>${current.item.nombre}</td>
-                <td>${current.item.password}</td>
-            </tr>
-        `;
-        if(current.left != null){
-            row += this.#inOrderRecursive(current.left);
-        }
-        if(current.right != null){
-            row += this.#inOrderRecursive(current.right);
-        }
-        return row;
-    }
-
-    //--------------------------------------------------------------------------
-    //                  RECORRIDO POST ORDER
-    //--------------------------------------------------------------------------
-    postOrder(){
-        let html = this.#postOrderRecursive(this.root);
-        return html;
-    }
-    #postOrderRecursive(current){
-        let row = "";
-        if(current.left != null){
-            row += this.#inOrderRecursive(current.left);
-        }
-        if(current.right != null){
-            row += this.#inOrderRecursive(current.right);
-        }
-        row +=`
-            <tr>
-                <th>${current.item.carnet}</th>
-                <td>${current.item.nombre}</td>
-                <td>${current.item.password}</td>
-            </tr>
-        `;
-        return row;
+    rotateRight(node) {
+        let nodoleft = node.left;
+        node.left = nodoleft.right;
+        nodoleft.right = node;
+        node.height = Math.max(this.height(node.left), this.height(node.right)) + 1;
+        nodoleft.height = Math.max(this.height(nodoleft.left), this.height(nodoleft.right)) + 1;
+        return nodoleft;
     }
 
 
+    insert(item) {
+        let newNode = new AvlNode(item);
+        this.root = this.insertRecursive(this.root, newNode);
+    }
+
+    insertRecursive(node, newNode) {
+        if (!node) {
+            return newNode;
+        }
+        if (newNode.item.carnet < node.item.carnet) {
+            node.left = this.insertRecursive(node.left, newNode);
+        } else if (newNode.item.carnet > node.item.carnet) {
+            node.right = this.insertRecursive(node.right, newNode);
+        } else {
+            // Si el carnet ya existe, no se inserta el nuevo node
+            return node;
+        }
+        node.height = Math.max(this.height(node.left), this.height(node.right)) + 1;
+        return this.balanceRecursive(node);
+    }
+
+
+    inOrder() {
+        let nodes = [];
+        this.inOrderRecursive(this.root, nodes);
+        return nodes;
+    }
+
+    inOrderRecursive(node, nodes) {
+        if (node) {
+            this.inOrderRecursive(node.left, nodes);
+            nodes.push(node);
+            this.inOrderRecursive(node.right, nodes);
+        }
+    }
+
+    postOrder() {
+        let nodes = [];
+        this.postOrderRecursive(this.root, nodes);
+        return nodes;
+    }
+
+    postOrderRecursive(node, nodes) {
+        if (node) {
+            this.postOrderRecursive(node.left, nodes);
+            this.postOrderRecursive(node.right, nodes);
+            nodes.push(node);
+        }
+    }
+
+    preOrder() {
+        let nodes = [];
+        this.preOrderRecursive(this.root, nodes);
+        return nodes;
+    }
+
+    preOrderRecursive(node, nodes) {
+        if (node) {
+            nodes.push(node);
+            this.preOrderRecursive(node.left, nodes);
+            this.preOrderRecursive(node.right, nodes);
+        }
+    }
+
+    getId() {
+        return "id" + Math.random().toString(16).slice(2);
+    }
+
+    graph() {
+        return this.graphRecursive(this.root, this.getId());
+    }
+
+    graphRecursive(node, name) {
+        if (node) {
+            let value = ' node' + name + '  [label = \"' + node.item.nombre + '\\n' + node.item.carnet + '\\nAltura: ' + node.height + '\" shape = \"oval\"]';
+            let nombreleft = this.getId();
+            let graphleft = this.graphRecursive(node.left, nombreleft);
+            if (graphleft) {
+                value += graphleft + ' node' + name + ' -> ' + 'node' + nombreleft;
+            }
+            let nombreright = this.getId();
+            let graphright = this.graphRecursive(node.right, nombreright);
+            if (graphright) {
+                value += graphright + ' node' + name + ' -> ' + 'node' + nombreright;
+            }
+            return value;
+        }
+        else{
+            return null;
+        }
+   
+    }
 }
