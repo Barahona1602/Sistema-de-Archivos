@@ -75,6 +75,40 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Poppins-Bold', sans-serif;
 }
 
+.opciones{
+  background-color: rgba(184, 177, 70, 0.8);
+  border: none;
+  color: #fff;
+  border-radius: 20px;
+  box-shadow: none;
+  transition: all 0.3s ease;
+  font-family: 'Poppins-Bold', sans-serif;
+  width: 100%;
+  padding: 0.5em;
+}
+
+.link-like {
+  color: black;
+  text-decoration: none;
+}
+
+.link-like:hover {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+}
+
+
+#file{
+  background-color: rgba(184, 177, 70, 0.8);
+  border: none;
+  color: #fff;
+  border-radius: 20px;
+  box-shadow: none;
+  transition: all 0.3s ease;
+  font-family: 'Poppins-Bold', sans-serif;
+  width: 100%;
+  padding: 0.5em;
+}
  
 .btn:hover, .btn:focus {
     background-color: #000;
@@ -125,6 +159,17 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: none;
     transition: all 0.3s ease;
     font-family: 'Poppins-Bold', sans-serif;
+  }
+
+  .btn-dangers {
+    background-color: #dc3545;
+    border: none;
+    color: #fff;
+    border-radius: 20px;
+    box-shadow: none;
+    transition: all 0.3s ease;
+    font-family: 'Poppins-Bold', sans-serif;
+    padding: 0.25em 0.5em;
   }
 
   .grid-container {
@@ -189,11 +234,12 @@ h1, h2, h3, h4, h5, h6 {
   margin-right: 20px;
   font-family: 'Montserrat-Medium', sans-serif; 
 }
+
 .row{
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start; /* añadido */
   margin-top: 20px;
   margin-bottom: 10px;
 }

@@ -26,6 +26,7 @@
         </div>  
         <div class="row">
             <div class="col-4">
+                <div>   
                 <h5>Carpetas</h5>
                 <hr>
                 <form class="form" onsubmit="crearCarpeta(event)">
@@ -36,7 +37,51 @@
                 </form>
                 <a onclick="renombreCarpeta()" class="btn btn-primary w-100">Modificar Carpeta</a>
                 <a onclick="eliminarCarpeta()" class="btn btn-danger w-100 mt-3">Eliminar Carpeta</a>
+                <div class="">
+                <hr>
+                <h5>Subir Archivos</h5>
+                <hr>
+                <form class="form" onsubmit="subirArchivo(event)">
+                    <input type="file" class="carga mt-3 "id="file" name="file" accept=".pdf,.txt,image/*">
+                    <div class="form-group mt-4">
+                        <button type="submit" class="btn btn-primary w-100">Cargar Archivo</button>
+                    </div>
+                </form>
+                </div>
+                <div class="">
+                    <hr>
+                    <h5>Permisos de archivo de la carpeta</h5>
+                    <hr>
+                        <div class="form-group mt-4">
+                            <a onclick="mostrarPermiso()" class="btn btn-mostrar">Opciones de permiso</a>
+                            <a onclick="regresarPermiso()" class="btn btn-dangers mt-3">Regresar</a>
+                            <select class= "opciones mt-3" id="archivoSelect">
+                                <option value="" disabled selected>Selecciona un archivo</option>
+                            </select>
+                            <select class= "opciones mt-3" id="carnetSelect">
+                                <option value="" disabled selected>Selecciona un carnet</option>
+                            </select>
+                            <select class= "opciones mt-3" id="permisoSelect">
+                                <option value="" disabled selected>Selecciona un permiso</option>
+                                <option value="r">r</option>
+                                <option value="r-w">r-w</option>
+                            </select>
+                            <a onclick="darPermiso()" class="btn btn-dar w-100 mt-3">Dar Permiso</a>                        
+                        </div>
+
+                </div>
+                <div class="">
+                    <hr>
+                    <h5>Reportes</h5>
+                    <hr>
+                        <div class="form-group mt-4">
+                            <a onclick="showGraph()" class="btn btn-primary w-100 mt-3">Reporte de Carpetas</a>
+                            <a onclick="showGraphMD()" class="btn btn-primary w-100 mt-3">Reporte de Archivos</a>
+                            <a onclick="showGraphC()" class="btn btn-primary w-100 mt-3">Bitácora</a>
+                        </div>
+                </div>
             </div>
+        </div>
             <div class="col-8">
                 <h5 class="text-center">Archivos de Carpeta</h5>
                 <hr>
@@ -55,16 +100,10 @@
                 <div class="row mt-4" id="carpetas">
                     <!-- MOSTRAR LAS CARPETAS -->
                 </div>
+                
             </div>
         </div>
-        <div class="col-4">
-            <hr>
-                <div class="form-group mt-4">
-                    <a onclick="showGraph()" class="btn btn-primary w-100 mt-3">Reporte de Carpetas</a>
-                    <a onclick="showGraphMD()" class="btn btn-primary w-100 mt-3">Reporte de Archivos</a>
-                    <a onclick="showGraphC()" class="btn btn-primary w-100 mt-3">Bitácora</a>
-                </div>
-        </div>
+        
         <div class="mt-5">
             <h1>Reporte de Carpetas</h1>
             <hr>
@@ -103,8 +142,10 @@
     <!-- Librerias-->
     <script src="./js/lib/cycle.js"></script>
     <!-- Importar Estructuras -->
-    <script src="./js/structures/arbol-N.js"></script>
+    <script src="./js/structures/matrizDis.js"></script>
     <script src="./js/structures/listaCircular.js"></script>
+    <script src="./js/structures/arbol-N.js"></script>
+
     <!-- Importar Archivo Principal -->
     <script src="./js/users.js"></script>
 

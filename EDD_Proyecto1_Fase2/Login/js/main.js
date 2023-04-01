@@ -1,5 +1,3 @@
-/*==================================================================
-[ Validate ]*/
 var input = $('.validate-input .input100');
 
 $('.validate-form').on('submit', function (e) {
@@ -23,14 +21,14 @@ $('.validate-form').on('submit', function (e) {
         var studentsData = localStorage.getItem('studentsData');
         if (studentsData) {
             var studentsArray = JSON.parse(studentsData);
-            // Iterar a través de los objetos de estudiantes para encontrar una coincidencia
             for (var j = 0; j < studentsArray.length; j++) {
                 var carnss=studentsArray[j].carnet.toString()
                 if (carnss === email && studentsArray[j].password === password) {
-                    // Redireccionar al estudiante a la página estudiantes.html si se encuentra una coincidencia
                     window.location.href = "../DashboardUser/users.html";
                     nombreST=studentsArray[j].nombre;
+                    carnetST=studentsArray[j].carnet;
                     sessionStorage.setItem('nombreEstudiante', nombreST);
+                    sessionStorage.setItem('carnetEstudiante', carnetST);
                     return;
                 }
             }
@@ -39,8 +37,6 @@ $('.validate-form').on('submit', function (e) {
 
     return check;
 });
-
-
 
 
 
