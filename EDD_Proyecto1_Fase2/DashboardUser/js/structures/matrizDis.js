@@ -18,8 +18,15 @@ class Mnode{
 // CLASE  MATRIZ DISPERSA
 class SparseMatrix{
 
-    constructor(hola){
-        this.head =  new Mnode(-1, -1, hola);
+    // constructor(hola){
+    //     if (hola == undefined) {
+    //         hola = "/"
+    //     }
+    //     this.head =  new Mnode(-1, -1, hola);
+    // }
+
+    constructor(){
+        this.head =  new Mnode(-1, -1, "Carpeta");
     }
     
     insertarMD(x, y, value){

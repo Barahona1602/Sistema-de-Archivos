@@ -46,11 +46,11 @@ class Tree {
 
   insertarDatosMD(carnet, archivos, permiso, folderPath) {
     let temp = this.getFolder(folderPath)
-    if (this.currentNode !== temp) { // si es un nodo diferente
-      this.contador = 0; // reinicia el contador
-      this.currentNode = temp; // actualiza el nodo actual
-      temp.matrizD = new SparseMatrix(temp.folderName);
-    }
+    // if (this.currentNode !== temp) { // si es un nodo diferente
+    //   this.contador = 0; // reinicia el contador
+    //   this.currentNode = temp; // actualiza el nodo actual
+    //   temp.matrizD = new SparseMatrix(temp.folderName);
+    // }
     temp.matrizD.insertarMD(carnet, archivos, permiso);
     this.contador += 1;
   }
@@ -79,9 +79,7 @@ class Tree {
   }
 
   getFolder(path) {
-    // Padre sea una '/'
-    // console.log(path);
-    if (path == this.root.folderName) {
+    if (!path || path == this.root.folderName) { // Si path es undefined o "/"
       return this.root;
     } else {
       let temp = this.root;
@@ -101,6 +99,7 @@ class Tree {
       return temp;
     }
   }
+  
 
   graph() {
     let nodes = "";
