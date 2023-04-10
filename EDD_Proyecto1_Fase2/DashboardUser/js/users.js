@@ -351,19 +351,11 @@ function showGraph() {
 
 //GRAFICAR MATRIZ DISPERSA
 function showGraphMD() {
+  $("#graph3").attr("src", ""); 
   let path = $('#path').val();
-  if (archivoSelect.length === 1) {
-    Swal.fire({
-      icon: "error",
-      title: "No hay archivos en la carpeta",
-      text: "Agrega archivos a la carpeta",
-    });
-    return;
-  } else {
   let url = 'https://quickchart.io/graphviz?graph=';
   let body = `digraph G { ${tree.matrixGrpah(path)} }`
   $("#graph3").attr("src", url + body);
-  }
 }
 
 

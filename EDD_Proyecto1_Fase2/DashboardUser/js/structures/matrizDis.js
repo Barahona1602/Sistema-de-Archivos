@@ -43,6 +43,14 @@ class SparseMatrix{
     }
 
     graphMD(){
+        if (!this.head.right || !this.head.down) { // verificar si no hay headers
+            Swal.fire({
+                icon: "error",
+                title: "No hay archivos en la carpeta",
+                text: "Agrega archivos a la carpeta",
+              });
+            return "";
+        }
         let code = "graph [nodesep=\"0.8\", ranksep=\"0.6\"]; \n";
 		code +="M0[ label = \""+this.head.value+"\" width = 1.5 shape = \"square\" group=\"0\"]; \n";
         code += this.#headersGraph()
