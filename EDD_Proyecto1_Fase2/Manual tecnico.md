@@ -1,6 +1,9 @@
 Universidad de San Carlos de Guatemala
+
 Facultad de Ingeniería
+
 Escuela de Ciencias y Sistemas
+
 Estructura de Datos
 
 # Manual Técnico - Proyecto Fase 2
