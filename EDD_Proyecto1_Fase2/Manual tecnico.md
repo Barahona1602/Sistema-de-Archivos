@@ -28,4 +28,5 @@ En esta parte se usan 4 tipos de EDD, las cuales son las siguientes, acompañada
 - **Lista Circular**: La lista circular se utiliza para guardar el historial de acciones del programa, en el cual se puede visualizar la gráfica en el botón de Bitácora, entre sus elementos solo utiliza un dato.
 
 La estructura de los archivos está dividida así:
+
 ![image](https://user-images.githubusercontent.com/98893615/230949481-43b2578a-fafb-4ce0-84cf-4c0f31378a91.png)
