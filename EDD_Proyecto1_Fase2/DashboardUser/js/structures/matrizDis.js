@@ -46,8 +46,8 @@ class SparseMatrix{
         if (!this.head.right || !this.head.down) { // verificar si no hay headers
             Swal.fire({
                 icon: "error",
-                title: "No hay archivos en la carpeta",
-                text: "Agrega archivos a la carpeta",
+                title: "No hay permisos otorgados en la carpeta",
+                text: "Agrega permisos en la carpeta",
               });
             return "";
         }

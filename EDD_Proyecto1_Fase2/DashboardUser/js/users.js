@@ -308,11 +308,35 @@ function renombreCarpeta() {
   }).then((result) => {
     if (result.isConfirmed) {
       let newName = result.value;
+
+      // Validación de nombre duplicado
+      let parentPath = oldPath.substring(0, oldPath.lastIndexOf("/"));
+      let parentNode = tree.getFolder(parentPath);
+      let existingFolderNames = parentNode.children.map(
+        (child) => child.folderName
+      );
+      
+      if (existingFolderNames.includes(newName)) {
+        Swal.fire({
+          icon: "warning",
+          title: "Nombre de carpeta duplicado",
+          text: `El nombre "${newName}" ya está en uso. Por favor, elija otro nombre.`,
+        }).then(() => {
+          // Volver a pedir el nombre
+          renombreCarpeta();
+        });
+        return;
+      }
+
       tree.renameFolder(oldPath, newName);
-      localStorage.setItem("tree" + carnetEstudiante, JSON.stringify(JSON.decycle(tree)));
+      localStorage.setItem(
+        "tree" + carnetEstudiante,
+        JSON.stringify(JSON.decycle(tree))
+      );
     }
   });
 }
+
 
 
 
