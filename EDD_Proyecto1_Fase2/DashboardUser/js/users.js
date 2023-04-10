@@ -122,11 +122,7 @@ function darPermiso() {
     return;
   }
   let path = $("#path").val();
-  //tree.insertarDatosMD(path, '"'+archivo+'"', '"'+carnet+'"', '"'+permiso+'"')
   tree.insertarDatosMD(archivo, carnet, permiso, path)
-  //matrix.insertarMD(archivo, carnet, permiso);
-  //console.log(lastElement);
-  // console.log(tree.matrixGrpah(path));
   console.log(`Archivo seleccionado: ${archivo}`);
   console.log(`Carnet seleccionado: ${carnet}`);
   console.log(`Permiso seleccionado: ${permiso}`);
@@ -365,7 +361,6 @@ function showGraphMD() {
     return;
   } else {
   let url = 'https://quickchart.io/graphviz?graph=';
-  console.log(tree.matrixGrpah(path))
   let body = `digraph G { ${tree.matrixGrpah(path)} }`
   $("#graph3").attr("src", url + body);
   }

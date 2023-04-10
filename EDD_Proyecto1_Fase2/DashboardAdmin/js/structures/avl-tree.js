@@ -130,7 +130,7 @@ class AvlTree {
 
     graphRecursive(node, name) {
         if (node) {
-            let value = ' node' + name + '  [label = \"' + node.item.nombre + '\\n' + node.item.carnet + '\\nAltura: ' + node.height + '\" shape = \"oval\"]';
+            let value = ' node' + name + '  [label = \"' + node.item.nombre + '\\n' + node.item.carnet + '\\nAltura: ' + node.height + '\" shape = \"box\"]';
             let nombreleft = this.getId();
             let graphleft = this.graphRecursive(node.left, nombreleft);
             if (graphleft) {
