@@ -1,0 +1,139 @@
+/* Estilos generales */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+
+body {
+    font-family: 'Montserrat-Medium', sans-serif;
+    font-size: 16px;
+    color: #fff;
+    background: #9053c7;
+    background: -webkit-linear-gradient(-135deg, #c850c0, #4158d0);
+    background: -o-linear-gradient(-135deg, #c850c0, #4158d0);
+    background: -moz-linear-gradient(-135deg, #c850c0, #4158d0);
+    background: linear-gradient(-135deg, #c850c0, #4158d0);
+    background-attachment: fixed;
+    
+}
+
+hr {
+    border-top: 1px solid #fff;
+}
+
+/* Estilos del contenedor principal */
+.container {
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Estilos de los títulos */
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    font-weight: bold;
+    font-family: 'Poppins-Bold', sans-serif;
+}
+
+/* Estilos del formulario */
+.form {
+    margin-bottom: 1rem;
+}
+
+.form-control {
+    background-color: #212529;
+    border: none;
+    color: #fff;
+    border-radius: 0;
+    box-shadow: none;
+    font-family: 'Montserrat-Medium', sans-serif;
+}
+
+.form-control:focus {
+    background-color: #212529;
+    border: none;
+    color: #fff;
+    box-shadow: none;
+    font-family: 'Montserrat-Medium', sans-serif;
+}
+
+.form-select {
+    background-color: #212529;
+    border: none;
+    color: #fff;
+    border-radius: 0;
+    box-shadow: none;
+    font-family: 'Montserrat-Medium', sans-serif;
+}
+
+/* Estilos del botón */
+.btn {
+    background-color: rgba(87,184,70, 0.8);
+    border: none;
+    color: #fff;
+    border-radius: 20px;
+    box-shadow: none;
+    transition: all 0.3s ease;
+    font-family: 'Poppins-Bold', sans-serif;
+}
+
+
+.btn:hover, .btn:focus {
+    background-color: #000;
+    border: none;
+    color: #fff;
+    box-shadow: none;
+    font-family: 'Poppins-Bold', sans-serif;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+    color: #fff;
+    border-radius: 20px;
+    box-shadow: none;
+    transition: all 0.3s ease;
+    font-family: 'Poppins-Bold', sans-serif;
+  }
+
+/* Estilos de la tabla */
+.table {
+    background-color: #212529;
+    border: none;
+    font-family: 'Montserrat-Medium', sans-serif;
+}
+
+.table thead th {
+    color: #fff;
+    background-color: #343a40;
+    border-color: #454d55;
+    font-family: 'Poppins-Bold', sans-serif;
+}
+
+.table tbody td {
+    vertical-align: middle;
+    font-family: 'Montserrat-Medium', sans-serif;
+}
+
+/* Estilos de la imagen */
+#graph {
+    width: 100%;
+    height: auto;
+    margin-top: 1rem;
+}
+
+/* Fuentes */
+@font-face {
+  font-family: Montserrat-Bold;
+  src: url('../fonts/montserrat/Montserrat-Bold.ttf'); 
+}
+
+@font-face {
+  font-family: Poppins-Bold;
+  src: url('../fonts/poppins/Poppins-Bold.ttf'); 
+}
+
+@font-face {
+    font-family: Montserrat-Medium;
+    src: url('../fonts/montserrat/Montserrat-Medium.ttf'); 
+  }
