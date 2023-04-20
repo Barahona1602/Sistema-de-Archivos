@@ -5,8 +5,11 @@ $('.validate-form').on('submit', function (e) {
     var check = true;
     var email = $("input[name='email']").val();
     var password = $("input[name='pass']").val();
+    var password2 = $("input[name='pass']").val();
+    const encryptedPassword = CryptoJS.SHA256(password).toString();
+    password = encryptedPassword;
 
-    if(email === "admin" && password === "admin") {
+    if(email === "admin" && password2 === "admin") {
         sessionStorage.setItem('admin', 'admin');
         window.location.href = "../DashboardAdmin/admin.html";
         return;
@@ -23,7 +26,7 @@ $('.validate-form').on('submit', function (e) {
             var studentsArray = JSON.parse(studentsData);
             for (var j = 0; j < studentsArray.length; j++) {
                 var carnss=studentsArray[j].carnet.toString()
-                if (carnss === email && studentsArray[j].password === password) {
+                if (carnss === email && studentsArray[j].password === encryptedPassword) {
                     window.location.href = "../DashboardUser/users.html";
                     nombreST=studentsArray[j].nombre;
                     carnetST=studentsArray[j].carnet;

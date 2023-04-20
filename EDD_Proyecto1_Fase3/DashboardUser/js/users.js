@@ -18,6 +18,7 @@ if (!sessionStorage.getItem("nombreEstudiante")) {
   });
 }
 
+let datos=[];
 //DECLARACONES
 var nombreUsuario = nombreEstudiante.split(" ")[0];
 var elementoBienvenido = document.querySelector("h1");
@@ -85,6 +86,14 @@ if (treeData !== null && treeData !== undefined) {
   //console.log(tree);
 }
 
+let permisosData = JSON.parse(localStorage.getItem("permisosData"));
+if (permisosData !== null && permisosData !== undefined) {
+  for (let i = 0; i < permisosData.length; i++) {
+    datos.push(permisosData[i]);
+  }
+  console.log(permisosData)
+}
+
 
 //FUNCION PARA BOTON DE DAR PERMISO
 function darPermiso() {
@@ -122,12 +131,23 @@ function darPermiso() {
     return;
   }
   let path = $("#path").val();
-  tree.insertarDatosMD(archivo, carnet, permiso, path)
+  //tree.insertarDatosMD(archivo, carnet, permiso, path)
   console.log(`Archivo seleccionado: ${archivo}`);
   console.log(`Carnet seleccionado: ${carnet}`);
   console.log(`Permiso seleccionado: ${permiso}`);
   localStorage.setItem("tree" + carnetEstudiante, JSON.stringify(JSON.decycle(tree)));
   mostrarArchivo();
+  const datos2 = {
+    Propietario: carnetEstudiante,
+    Destino: carnet,
+    Ubicacion: path,
+    Archivo: archivo,
+    Permiso: permiso
+  };
+  datos.push(datos2);
+  const datosString = JSON.stringify(datos);
+  localStorage.setItem('permisosData', datosString);
+
 }
 
 

@@ -40,6 +40,7 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 1rem;
 }
 
+
 .form-control {
     background-color: #212529;
     border: none;
@@ -105,7 +106,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .table thead th {
     color: #fff;
-    background-color: #343a40;
+    background-color: rgba(87,184,70, 0.8);
     border-color: #454d55;
     font-family: 'Poppins-Bold', sans-serif;
 }

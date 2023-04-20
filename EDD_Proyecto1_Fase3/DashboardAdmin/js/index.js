@@ -18,7 +18,7 @@ if (sessionStorage.getItem('admin') !== 'admin') {
 
 
 // DECLARACIÓN DE LAS ESTRUCTURAS A UTILIZAR
-let avlTree = new AvlTree();
+let hash = new HashTable();
 
 function loadStudentsForm(e) {
   e.preventDefault();
@@ -65,26 +65,26 @@ function loadStudentsForm(e) {
         });
       }
 
-      // AGREGAR A LA TABLA LOS ALUMNOS CARGADOS 
-      $('#studentsTable tbody').html(
-        studentsDataArray.map((item, index) => {
-          return(`
-            <tr>
-              <th>${item.carnet}</th>
-              <td>${item.nombre}</td>
-              <td>${item.password}</td>
-            </tr>
-          `);
-        }).join('')
-      );
-
       for(let i = 0; i < newStudentsArray.length; i++){
-        avlTree.insert(newStudentsArray[i]);
+        const encryptedPassword = CryptoJS.SHA256(newStudentsArray[i].password).toString();
+        newStudentsArray[i].password = encryptedPassword;
+        console.log(newStudentsArray[i])
+        hash.insert(newStudentsArray[i]);
       }
 
       // GUARDAR DATOS EN LOCALSTORAGE
       localStorage.setItem('studentsData', JSON.stringify(studentsDataArray));
-      console.log(studentsDataArray);
+      studentsData = localStorage.getItem('studentsData');
+      if (studentsData) {
+        const studentsDataArray = JSON.parse(studentsData);
+        for(let i = 0; i < studentsDataArray.length; i++){
+          // desencriptar la contraseña
+          const decryptedPassword = CryptoJS.SHA256(studentsDataArray[i].password).toString();
+          studentsDataArray[i].password = decryptedPassword;
+          hash.insert(studentsDataArray[i]);
+        }
+        hash.loadDataToTable();
+      }
     }
   } catch(error){
     Swal.fire({
@@ -95,61 +95,55 @@ function loadStudentsForm(e) {
   }
 }
 
-
-  // CARGAR DATOS DEL LOCAL STORAGE AL RECARGAR LA PÁGINA
-function loadDataFromLocalStorage() {
-  const studentsData = localStorage.getItem('studentsData');
-  if (studentsData) {
-    const studentsArray = JSON.parse(studentsData);
-    $('#studentsTable tbody').html(
-      studentsArray.map((item, index) => {
+// CARGAR DATOS DEL LOCAL STORAGE AL RECARGAR LA PÁGINA
+function loadPermisosFromLocalStorage() {
+  const permisosData = localStorage.getItem('permisosData');
+  console.log(permisosData)
+  if (permisosData) {
+    const permisosArray = JSON.parse(permisosData);
+    $('#permisosTable tbody').html(
+      permisosArray.map((item, index) => {
         return(`
           <tr>
-            <th>${item.carnet}</th>
-            <td>${item.nombre}</td>
-            <td>${item.password}</td>
+            <th>${item.Propietario}</th>
+            <td>${item.Destino}</td>
+            <td>${item.Ubicacion}</td>
+            <td>${item.Archivo}</td>
+            <td>${item.Permiso}</td>
           </tr>
         `);
       }).join('')
     );
-    for(let i = 0; i < studentsArray.length; i++){
-      avlTree.insert(studentsArray[i]);
+  }
+}
+
+
+// CARGAR DATOS DEL LOCAL STORAGE AL RECARGAR LA PÁGINA
+function loadDataFromLocalStorage() {
+  const studentsData = localStorage.getItem('studentsData');
+  console.log(studentsData)
+  if (studentsData) {
+    const studentsDataArray = JSON.parse(studentsData);
+    for(let i = 0; i < studentsDataArray.length; i++){
+      // desencriptar la contraseña
+      const decryptedPassword = CryptoJS.SHA256(studentsDataArray[i].password).toString();
+      studentsDataArray[i].password = decryptedPassword;
+      hash.insert(studentsDataArray[i]);
     }
+    hash.loadDataToTable();
   }
 }
 
 // EVENTO ONLOAD PARA CARGAR DATOS DEL LOCAL STORAGE AL RECARGAR LA PÁGINA
 window.onload = function() {
   loadDataFromLocalStorage();
+  loadPermisosFromLocalStorage()
 };
-
-// FUNCIÓN PARA AGREGAR RECORRIDOS
-function showStudentsForm(e){
-  e.preventDefault();
-  const formData = new FormData(e.target);
-  const form = Object.fromEntries(formData);
-  if(avlTree.root !== null){
-    switch(form.traversal){
-      case 'inOrder':
-          inOrder()
-        break;
-      case 'preOrder':
-        preOrder()
-        break;
-      case 'postOrder':
-        postOrder()
-        break;
-      default:
-        $('#studentsTable tbody').html("")
-        break;
-    }
-  }
-}
 
 // FUNCIÓN PARA GRAPHVIZ
 function showAvlGraph(){
   let url = 'https://quickchart.io/graphviz?graph=';
-  let body = `digraph G { ${avlTree.graph()} }`
+  let body = `digraph G { ${hash.toGraphviz()} }`
   $("#graph").attr("src", url + body);
 }
 
@@ -157,61 +151,3 @@ function showAvlGraph(){
 function logout() {
   window.location.href = "../Login/login.html";
 }
-
-function inOrder(){
-  let nodos = avlTree.inOrder();
-
-  // Agregar cada item en una fila de la tabla HTML
-  let tableBody = document.querySelector('#studentsTable tbody');
-  let row = "";
-  for (let i = 0; i < nodos.length; i++) {
-      let current = nodos[i];
-      row += `
-          <tr>
-              <th>${current.item.carnet}</th>
-              <td>${current.item.nombre}</td>
-              <td>${current.item.password}</td>
-          </tr>
-      `;
-  }
-  tableBody.innerHTML = row;
-}
-
-function postOrder(){
-  let nodos = avlTree.postOrder();
-
-  // Agregar cada item en una fila de la tabla HTML
-  let tableBody = document.querySelector('#studentsTable tbody');
-  let row = "";
-  for (let i = 0; i < nodos.length; i++) {
-      let current = nodos[i];
-      row += `
-          <tr>
-              <th>${current.item.carnet}</th>
-              <td>${current.item.nombre}</td>
-              <td>${current.item.password}</td>
-          </tr>
-      `;
-  }
-  tableBody.innerHTML = row;
-}
-
-function preOrder(){
-  let nodos = avlTree.preOrder();
-
-  // Agregar cada item en una fila de la tabla HTML
-  let tableBody = document.querySelector('#studentsTable tbody');
-  let row = "";
-  for (let i = 0; i < nodos.length; i++) {
-      let current = nodos[i];
-      row += `
-          <tr>
-              <th>${current.item.carnet}</th>
-              <td>${current.item.nombre}</td>
-              <td>${current.item.password}</td>
-          </tr>
-      `;
-  }
-  tableBody.innerHTML = row;
-}
-

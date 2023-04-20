@@ -9,6 +9,7 @@
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <link rel="stylesheet" href="css/styles.css">
     <title>Dashboard Admin</title>
     <link rel="icon" type="image/png" href="images/icons/admin.ico"/>
@@ -21,56 +22,51 @@
             <button type="button" class="btn btn-danger" onclick="logout()">Logout</button>
         </div>
         <hr>
-        <div class="row">
-            <div class="col-4">
+            <div>
                 <h5>Subir estudiantes</h5>
                 <hr>
                 <form class="form" onsubmit="loadStudentsForm(event)">
                     <input type="file" id="inputFile" name="inputFile" class="form-control" placeholder="Pos. X">
                     <div class="form-group mt-4">
                         <button type="submit" class="btn btn-primary w-100">Cargar Alumnos</button>
-                        <a onclick="showAvlGraph()" class="btn btn-primary w-100 mt-3">Gráfica del Arbol</a>
                     </div>
                 </form>
             </div>
-            <div class="col-8">
-                <h5>Estudiantes cargados </h5>
-                <hr>
-                <form class="form" onsubmit="showStudentsForm(event)">
-                    <div class="row">
-                        <div class="col-8">
-                            <select id="traversal" name="traversal" class="form-select">
-                                <option selected value="inOrder">In Order</option>
-                                <option value="preOrder">Pre Order</option>
-                                <option value="postOrder">Post Order</option>
-                            </select>
-                        </div>
-                        <div class="col-4">
-                            <button type="submit" class="btn btn-primary w-100">Mostrar</button>    
-                        </div>
-                    </div>
-                </form>
-                
-                <div id="studentsTable">
-                    <table class="table text-light">
-                        <thead>
-                            <tr>
-                                <th scope="col">Carnet</th>
-                                <th scope="col">Nombre</th>
-                                <th scope="col">Contraseña</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="container mt-5">
-            <h1>Reporte de Árbol AVL</h1>
             <hr>
-            <img id="graph">
-        </div>
+            <h5>Estudiantes en el sistema </h5>  
+            <div id="studentsTable">
+                <table class="table text-light">
+                    <thead>
+                        <tr>
+                            <th scope="col">Carnet</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Contraseña</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <h5>Permisos </h5>
+            <div id="permisosTable">
+                <table class="table text-light">
+                    <thead>
+                        <tr>
+                            <th scope="col">Propietario</th>
+                            <th scope="col">Destino</th>
+                            <th scope="col">Ubicación</th>
+                            <th scope="col">Archivo</th>
+                            <th scope="col">Permisos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+                  
+
+        
 
     </div>
     
@@ -95,7 +91,7 @@
     <!-- Importar Librerias -->
     <script src="./js/lib/cycle.js"></script>
     <!-- Importar Estructuras -->
-    <script src="./js/structures/avl-tree.js"></script>
+    <script src="./js/structures/hash.js"></script>
     <!-- Importar Archivo Principal -->
     <script src="./js/index.js"></script>
 
