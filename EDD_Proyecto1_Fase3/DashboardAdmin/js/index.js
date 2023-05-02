@@ -18,7 +18,8 @@ if (sessionStorage.getItem('admin') !== 'admin') {
 
 
 // DECLARACIÓN DE LAS ESTRUCTURAS A UTILIZAR
-let hash = new HashTable();
+let avlTree = new AvlTree();
+let tablaHash = new HashTable();
 
 function loadStudentsForm(e) {
   e.preventDefault();
@@ -68,9 +69,11 @@ function loadStudentsForm(e) {
       for(let i = 0; i < newStudentsArray.length; i++){
         const encryptedPassword = CryptoJS.SHA256(newStudentsArray[i].password).toString();
         newStudentsArray[i].password = encryptedPassword;
-        console.log(newStudentsArray[i])
-        hash.insert(newStudentsArray[i]);
+        avlTree.insert(newStudentsArray[i]);
+
       }
+
+      
 
       // GUARDAR DATOS EN LOCALSTORAGE
       localStorage.setItem('studentsData', JSON.stringify(studentsDataArray));
@@ -81,9 +84,8 @@ function loadStudentsForm(e) {
           // desencriptar la contraseña
           const decryptedPassword = CryptoJS.SHA256(studentsDataArray[i].password).toString();
           studentsDataArray[i].password = decryptedPassword;
-          hash.insert(studentsDataArray[i]);
+          avlTree.insert(studentsDataArray[i]);
         }
-        hash.loadDataToTable();
       }
     }
   } catch(error){
@@ -93,7 +95,10 @@ function loadStudentsForm(e) {
       text: 'Error en la subida de los estudiantes'
     });      
   }
+
+  
 }
+
 
 // CARGAR DATOS DEL LOCAL STORAGE AL RECARGAR LA PÁGINA
 function loadPermisosFromLocalStorage() {
@@ -103,41 +108,79 @@ function loadPermisosFromLocalStorage() {
     const permisosArray = JSON.parse(permisosData);
     $('#permisosTable tbody').html(
       permisosArray.map((item, index) => {
-        return(`
-          <tr>
-            <th>${item.Propietario}</th>
-            <td>${item.Destino}</td>
-            <td>${item.Ubicacion}</td>
-            <td>${item.Archivo}</td>
-            <td>${item.Permiso}</td>
-          </tr>
-        `);
+        if (item.Type === 'text/plain') {
+          // Si es un archivo de texto plano, agregar un enlace para descargar el archivo
+          return(`
+            <tr>
+              <th>${item.Propietario}</th>
+              <td>${item.Destino}</td>
+              <td>${item.Ubicacion}</td>
+              <td>
+                <a href="#" class="link-like" onclick="downloadTxt('${item.Content}','${item.Archivo}')">${item.Archivo}</a>
+              </td>
+              <td>${item.Permiso}</td>
+            </tr>
+          `);
+        } else {
+          // Si no es un archivo de texto plano, agregar un enlace para descargar el archivo como antes
+          return(`
+            <tr>
+              <th>${item.Propietario}</th>
+              <td>${item.Destino}</td>
+              <td>${item.Ubicacion}</td>
+              <td>
+                <a href="${item.Content}" download="${item.Archivo}">${item.Archivo}</a>
+              </td>
+              <td>${item.Permiso}</td>
+            </tr>
+          `);
+        }
       }).join('')
     );
   }
 }
 
+function downloadTxt(text, name) {
+  // Crear un objeto Blob
+  const blob = new Blob([text], { type: 'text/plain' });
+
+  // Crear una URL temporal para el Blob
+  const url = URL.createObjectURL(blob);
+
+  // Crear un elemento "a" para descargar el archivo
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = name+".txt";
+
+  // Hacer clic en el enlace para descargar el archivo
+  document.body.appendChild(a);
+  a.click();
+
+  // Limpiar la URL temporal
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+
 
 // CARGAR DATOS DEL LOCAL STORAGE AL RECARGAR LA PÁGINA
 function loadDataFromLocalStorage() {
   const studentsData = localStorage.getItem('studentsData');
-  console.log(studentsData)
   if (studentsData) {
     const studentsDataArray = JSON.parse(studentsData);
     for(let i = 0; i < studentsDataArray.length; i++){
       // desencriptar la contraseña
       const decryptedPassword = CryptoJS.SHA256(studentsDataArray[i].password).toString();
       studentsDataArray[i].password = decryptedPassword;
-      hash.insert(studentsDataArray[i]);
+      avlTree.insert(studentsDataArray[i]);
     }
-    hash.loadDataToTable();
   }
 }
 
 // EVENTO ONLOAD PARA CARGAR DATOS DEL LOCAL STORAGE AL RECARGAR LA PÁGINA
 window.onload = function() {
   loadDataFromLocalStorage();
-  loadPermisosFromLocalStorage()
+  loadPermisosFromLocalStorage();
 };
 
 // FUNCIÓN PARA GRAPHVIZ
@@ -151,3 +194,5 @@ function showAvlGraph(){
 function logout() {
   window.location.href = "../Login/login.html";
 }
+
+

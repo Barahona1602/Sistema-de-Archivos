@@ -1,76 +1,173 @@
-class HashTable {
-    constructor() {
-      this.table = new Array(7); // Creamos un array de tamaño `size` para almacenar la tabla hash
-      this.items = 0; // Inicializamos la cantidad de elementos en cero
-      this.prime = 11; // Creamos un número primo inicial para aumentar la capacidad de la tabla cuando sea necesario
-    }
-  
-    // Método para calcular el hash a partir del carnet del usuario
-    hash(carnet) {
-      const encodedCarnet = carnet.toString().split("").reduce((acc, curr) => acc + curr.charCodeAt(0), 0); // Codificamos el carnet convirtiendo cada carácter en su código ASCII y sumándolos
-      return encodedCarnet % this.table.length; // Utilizamos el resto de la división entre el valor codificado del carnet y el tamaño de la tabla como índice
-    }
-  
-    // Método para insertar un elemento en la tabla hash
-    insert({carnet, nombre, password}) {
-        console.log(carnet);
-      // Verificamos si la tabla ya ha llegado al 75% de su capacidad
-      if ((this.items / this.table.length) >= 0.75) {
-        this.increaseSize(); // Si es así, aumentamos el tamaño de la tabla
-      }
-      const key = this.hash(carnet); // Obtenemos el índice de la tabla a partir del carnet
-      let position = key;
-      let found = false;
-      let jump = 1; // Inicializamos la cantidad de saltos en 1
-      while (this.table[position]) { // Mientras haya colisión en la posición
-        if (this.table[position].carnet === carnet) { // Si el carnet ya está en la tabla, actualizamos el valor del nodo
-          this.table[position].nombre = nombre;
-          this.table[position].password = password;
-          found = true;
-          break;
-        }
-        position = (key + Math.pow(jump, 2)) % this.table.length; // Aplicamos la fórmula de salto al cuadrado
-        jump++; // Incrementamos la cantidad de saltos
-      }
-      if (!found) { // Si terminamos de recorrer la tabla y no encontramos el carnet, insertamos el nodo
-        this.table[position] = {carnet, nombre, password};
-        this.items++; // Incrementamos la cantidad de elementos en la tabla
-      }
-    }
-  
-    // Método para aumentar el tamaño de la tabla hash
-    increaseSize() {
-      const primes = [17, 31, 61, 127, 257, 521, 1031, 2053, 4099, 8209, 16411, 32771, 65537]; // Creamos un array de números primos para elegir el próximo número primo adecuado para aumentar el tamaño de la tabla
-      const newSize = primes.find(prime => (prime > this.table.length)); // Seleccionamos el primer número primo mayor que el tamaño actual de la tabla
-      const tempTable = [...this.table]; // Creamos una copia temporal de la tabla
-      this.table = new Array(newSize); // Creamos una nueva tabla con el nuevo tamaño
-      this.items = 0; // Reiniciamos la cantidad de elementos en cero
-      this.prime = primes[primes.indexOf(newSize) + 1]; // Actualizamos el número primo para la próxima vez que sea necesario aumentar el tamaño de la tabla
-      tempTable.forEach(item => { // Recorremos cada elemento de la tabla anterior
-        if (item) { // Si el elemento es válido
-          this.insert(item); // Insertamos el elemento en la nueva tabla
-        }
-      });
-    }
 
-    loadDataToTable() {
-        const studentsData = localStorage.getItem('studentsData');
-        if (studentsData) {
-          const studentsArray = JSON.parse(studentsData);
-          const tableBody = $('#studentsTable tbody'); // Obtén el cuerpo de la tabla HTML
-          tableBody.empty(); // Vacía la tabla HTML antes de cargar nuevos datos
-      
-          studentsArray.forEach(student => { // Recorre cada elemento de la tabla hash
-            const { carnet, nombre, password } = student;
-            const row = $('<tr>'); // Crea una nueva fila de tabla
-            // Crea tres celdas de tabla para el carnet, nombre y contraseña, respectivamente
-            const carnetCell = $('<td>').text(carnet);
-            const nombreCell = $('<td>').text(nombre);
-            const passCell = $('<td>').text(password);
-            row.append(carnetCell, nombreCell, passCell); // Agrega las celdas a la fila
-            tableBody.append(row); // Agrega la fila al cuerpo de la tabla HTML
-          });
-        }
+// CLASE NODO DE LA TABLA HASH
+class HashNode{
+  constructor(carnet, nombre, password){
+      this.carnet = carnet;
+      this.nombre = nombre;
+      this.password = password;
+  }
+}
+
+// CLASE TABLA HASH
+class HashTable{
+
+  constructor(){
+      // ARRAY QUE ALMACENARÁ LOS VALORES
+      this.table = new Array(7);
+      // CAPACIDAD DEL ARRAY(IRÁ CAMBIANDO A MEDIDA QUE SE AGREGUEN ELEMENTOS)
+      this.capacidad = 7;
+      // CANTIDAD DE ELEMENTOS INGRESADOS
+      this.espaciosUsados = 0;
+  }
+
+  // MÉTODO INSERTAR ELEMENTO
+  insert(carnet, nombre, password){
+      // OBTENER EL ÍNDICE DE LA FÓRMULA 
+      // FÓRMULA: (SUMA ASCII's DEL CARNET) % CAPACIDAD ACTUAL 
+      let indice = this.calcularIndice(carnet);
+      // CREAR NUEVO NODO
+      let nodoNuevo = new HashNode(carnet, nombre, password);
+      // COMPROBAR QUE EL INDICE SEA MENOR QUE A CAPACIADAD
+      if(indice < this.capacidad){
+          // VERIFICAR SI EN EL LA POSICIÓN DEL ARRAY ES NULO
+          if(this.table[indice] == null){
+              // SE AGREGA EL VALOR EN LA POSICIÓN
+              this.table[indice] = nodoNuevo;
+              // AGREGAR A LOS ESPACIOS USADOS
+              this.espaciosUsados++;
+          }else{
+              // OPERACIONES CUANDO EXISTE UNA COLISIÓN
+              // NÚMERO DE INTENTOS PARA LA FÓRMULA DE COLISIÓNES
+              let contador = 1;
+              // REASIGNAR EL ÍNDICE 
+              // FÓRMULA DE COLISIÓNES: 
+              // [(SUM ASCII's CARNET) % CAPACIDAD ACTUAL] + INTENTOS ^ 2
+              indice = this.recalcularIndice(carnet, contador);
+              // RECALCULAR HASTA ENCONTRAR UN ÍNDICE QUE ESTÉ VACÍO EN EL ARRAY
+              while(this.table[indice] != null){
+                  // AUMENTAR EL CONTADOR 
+                  contador++;
+                  // BUSCAR OTRA POSICIÓN CON EL CONTADOR AUMENTADO
+                  indice = this.recalcularIndice(carnet, contador);
+              }
+              // ASIGNAR ESPACIO AL ÍNDICE
+              this.table[indice] =  nodoNuevo;
+              // AGREGAR A LOS ESPACIOS USADOS
+              this.espaciosUsados++;
+          }
+
+          // MÉTODO QUE AMPLÍA EL ARRAY SI LLEGA AL 75% DE SU CAPACIDAD
+          this.checkCapacidad();
       }
 
   }
+
+  // METODO PARA APLICAR LA FÓRMULA Y OBTENER EL ÍNDICE
+  calcularIndice(carnet){
+      // SUMAR CARACTERES ASCII DEL CARNET
+      let strCarnet = carnet.toString();
+      let sum = 0;
+      for(let i = 0; i< strCarnet.length; i++){
+          sum += strCarnet.charCodeAt(i);
+      }
+      // APLICAR EL MÓDULO CON LA CAPACIDAD ACTUAL
+      let posicion = sum % this.capacidad;
+      return posicion;
+  }
+  
+  // MÉTODO PARA OBTENER ÍNDICES CUANDO EXISTE UNA COLISIÓN
+  recalcularIndice(carnet, contador){
+      // CALCULA EL ÍNDICE CON LA FÓRMULA Y SE LE AGREGA EL CONTADOR ^ 2
+      let indice = this.calcularIndice(carnet) + (contador*contador);
+      // SE LE RESTA LA CAPACIDAD SI ESTA ES SUPERADA
+      let nuevo =  this.nuevoIndice(indice);
+      // SE RETORNA EL VALOR DEL INDICE
+      return nuevo;
+  }
+
+  // FÓRMULA PARA RESTAR LA CAPACIADAD HASTA QUE SEA MENOR 
+  // A LA CAPACIDAD ACTUAL
+  nuevoIndice(indice){
+      let pos = 0;
+      if(indice < this.capacidad){
+          pos = indice;
+      }else{
+          pos = indice - this.capacidad;
+          pos = this.nuevoIndice(pos);
+      }
+      return pos;
+  }
+
+  // MÉTODO PARA REORGANIZAR LOS ELEMENTOS DEL ARRAY
+  checkCapacidad(){
+      // SE ESTABLECE EL PORCENTAJE DE UTILIZACIÓN
+      const utilizacion = this.capacidad * 0.75;
+      // SE VERIFICA CON LOS ESPACIOS UTIIZADOS
+      if(this.espaciosUsados > utilizacion){
+          // SE OBTIENE EL SIGUIENTE NÚMERO PRIMO
+          this.capacidad = this.generarNuevaCapacidad();
+          // SE REINICIA EL CONTEO DE ESPACIOS
+          this.espaciosUsados = 0;
+          // ARRAY ANTERIOR
+          const temp = this.table;
+          // LIMPIAR ARRAY ANTERIOR
+          this.table = new Array(this.capacidad);
+          // INGRESAR LOS VALORES DEL ARRAY ANTERIOR AL NUEVO ARRAY
+          temp.forEach(std => {
+              this.insert(std.carnet, std.nombre, std.password);
+          });
+      }
+
+  }
+
+  // SE OBTIENE EL SIGUIENTE NÚMERO PRIMO
+  generarNuevaCapacidad(){
+      let num = this.capacidad + 1; // SE LE SUMA UNO SÓLO PARA QUE NO DEVUELVA LA MISMA CAPACIDAD
+      while(!this.#esPrimo(num)){
+          num++;
+      }
+      return num;
+  }
+
+  // SE VERIFICA QUE EL NÚMERO SEA PRIMO
+  #esPrimo(num){
+      if (num <= 1) {return false}
+      if (num === 2) {return true}
+      if (num % 2 === 0) {return false}
+      for (let i = 3; i <= Math.sqrt(num); i += 2) {
+        if (num % i === 0) {return false};
+      }
+      return true;
+  }
+
+  // BUSCAR EN LA TABLA HASH
+  search(carnet){
+      // OBTENER EL ÍNDICE 
+      let indice = this.calcularIndice(carnet);
+      // VERIFICAR QUE EL ÍNDICE ESTÉ DENTRO DE LA CAPACIDAD
+      if(indice < this.capacidad){
+          try{ // TRY CATCH POR SI ACASO
+              // VERIFICAR SI LA POSICIÓN NO ES NULLA Y QUE SI EL CARNET ES EL MISMO
+              if(this.table[indice] != null && this.table[indice].carnet === carnet){
+                  return this.table[indice];
+              }else{
+                  // MISMA ITERACIÓN DE LA INSERCIÓN HASTA LLEGAR AL VALOR
+                  let contador = 1;
+                  indice = this.recalcularIndice(carent, contador);
+                  while(this.table[indice] != null){
+                      contador ++;
+                      indice = this.recalcularIndice(carent, contador);
+                      // SE VERIFICA EL CARNET Y SE RETORNA
+                      if(this.table[indice].carnet === carnet){
+                          return this.table[indice].carnet;
+                      }
+                  }
+              }
+          }catch(err){
+              console.log("Error ", err);
+          }
+      }
+      return null;
+  }
+
+}

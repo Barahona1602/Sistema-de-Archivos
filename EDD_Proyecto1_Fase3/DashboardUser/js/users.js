@@ -19,6 +19,7 @@ if (!sessionStorage.getItem("nombreEstudiante")) {
 }
 
 let datos=[];
+let archivitos= []
 //DECLARACONES
 var nombreUsuario = nombreEstudiante.split(" ")[0];
 var elementoBienvenido = document.querySelector("h1");
@@ -91,8 +92,16 @@ if (permisosData !== null && permisosData !== undefined) {
   for (let i = 0; i < permisosData.length; i++) {
     datos.push(permisosData[i]);
   }
-  console.log(permisosData)
 }
+
+let archivitoss = JSON.retrocycle(JSON.parse(localStorage.getItem("archivitos" + carnetEstudiante)));
+if (archivitoss !== null && archivitoss !== undefined) {
+  for (let i = 0; i < archivitoss.length; i++) {
+    archivitos.push(archivitoss[i]);
+  }
+  console.log(archivitos)
+}
+
 
 
 //FUNCION PARA BOTON DE DAR PERMISO
@@ -137,11 +146,16 @@ function darPermiso() {
   console.log(`Permiso seleccionado: ${permiso}`);
   localStorage.setItem("tree" + carnetEstudiante, JSON.stringify(JSON.decycle(tree)));
   mostrarArchivo();
+  console.log(archivitos)
+  const archivoEncontrado = archivitos.find(archivito => archivito.name === archivo);
+  const contenidoArchivo = archivoEncontrado.content;
   const datos2 = {
     Propietario: carnetEstudiante,
     Destino: carnet,
     Ubicacion: path,
     Archivo: archivo,
+    Content: contenidoArchivo,
+    Type: archivoEncontrado.type,
     Permiso: permiso
   };
   datos.push(datos2);
@@ -495,13 +509,17 @@ const toBase64 = (file) =>
       if (form.file.type === "text/plain") {
         let fr = new FileReader();
         fr.onload = function() {
-          console.log(fr.result);
           folder.files.push({
             name: fileName,
             content: fr.result,
             type: form.file.type,
           });
-  
+          archivitos.push({
+            name: fileName,
+            content: fr.result,
+            type: form.file.type,
+          });
+          localStorage.setItem("archivitos" + carnetEstudiante, JSON.stringify(JSON.decycle(archivitos)));
           localStorage.setItem("tree" + carnetEstudiante, JSON.stringify(JSON.decycle(tree)));
           $('#carpetas').html(tree.getHTML(path));
         };
@@ -513,6 +531,12 @@ const toBase64 = (file) =>
           content: parseBase64,
           type: form.file.type,
         });
+        archivitos.push({
+          name: fileName,
+          content: parseBase64,
+          type: form.file.type,
+        });
+        console.log(archivitos);
         const now = new Date();
         const year = now.getFullYear();
         const month = (now.getMonth() + 1).toString().padStart(2, "0");
@@ -524,12 +548,12 @@ const toBase64 = (file) =>
         const hour = "Hora: " + `${hours}:${minutes}:${seconds}`;
         var creo = "Se creó archivo\\n" + fileName + "\\n" + date + "\\n" + hour;
         listaCircular.insert(creo);
+        localStorage.setItem("archivitos" + carnetEstudiante, JSON.stringify(JSON.decycle(archivitos)));
         localStorage.setItem("listaCircular" + carnetEstudiante, JSON.stringify(JSON.decycle(listaCircular)));
         localStorage.setItem("tree" + carnetEstudiante, JSON.stringify(JSON.decycle(tree)));
         $('#carpetas').html(tree.getHTML(path));
       }
     }
   }
-
 
 
