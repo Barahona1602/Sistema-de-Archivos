@@ -266,8 +266,8 @@ function mostrarArchivo(){
   let path = $("#path").val();
   const archivoSelect = document.getElementById("archivoSelect");
   archivoSelect.options.length = 1;
-  const root = tree.getFolder(path);
-  root.files.forEach(file => {
+  let {node} = tree.getFolder(path);
+  node.files.forEach(file => {
     const option = document.createElement("option");
     option.text = file.name;
     archivoSelect.add(option);

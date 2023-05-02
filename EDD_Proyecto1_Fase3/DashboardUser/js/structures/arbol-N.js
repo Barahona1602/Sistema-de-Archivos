@@ -1,11 +1,11 @@
 class Tnode {
-  constructor(folderName) {
+  constructor(folderName, weight){
     this.folderName = folderName;
     this.files = [];
-    this.matrizD = new SparseMatrix();
-    this.children = [];
-    this.id = null;
-  }
+    this.children = []; // TODOS LOS NODOS HIJOS
+    this.id = null; // PARA GENERAR LA GRÁFICA
+    this.weight = weight;
+}
 }
 
 class Tree {
@@ -13,49 +13,31 @@ class Tree {
     this.root = new Tnode("/");
     this.root.id = 0;
     this.size = 1;
-    this.currentNode = this.root; 
-    this.contador = 0; 
-    
   }
 
-  insert(folderName, fatherPath) {
-    let fatherNode = this.getFolder(fatherPath);
-    if (!fatherNode) {
-      console.log("Ruta no existe");
-      return;
+  insert(folderName, fatherPath){ 
+    let {node:fatherNode, weight} = this.getFolder(fatherPath);
+    let newNode =  new Tnode(folderName, weight);
+    // console.log(newNode)
+    if(fatherNode){
+        this.size += 1;
+        newNode.id = this.size;
+        fatherNode.children.push(newNode);
+    }else{
+        console.log("Ruta no existe");
     }
 
-    let existingFolderNames = fatherNode.children.map(
-      (child) => child.folderName
-    );
+    let existingFolderNames = fatherNode.children.map((child) => child.folderName);
     let newName = folderName;
     let counter = 1;
     while (existingFolderNames.includes(newName)) {
       newName = `copia${counter} ${folderName}`;
       counter++;
     }
-
-    let newNode = new Tnode(newName);
-    this.size += 1;
-    newNode.id = this.size;
-    //newNode.matrizD = new SparseMatrix();
-    fatherNode.children.push(newNode);
-
-    return newName;
+    existingFolderNames[existingFolderNames.indexOf(folderName)] = newName;
+    newNode.folderName = newName;
   }
 
-  insertarDatosMD(carnet, archivos, permiso, folderPath) {
-    let temp = this.getFolder(folderPath)
-    temp.matrizD.insertarMD(carnet, archivos, permiso);
-    this.contador += 1;
-  }
-  
-
-  matrixGrpah(path){
-    let temp = this.getFolder(path)
-    console.log(temp.matrizD)
-    return temp.matrizD.graphMD()
-  }
   
 
   search(path) {
@@ -73,27 +55,28 @@ class Tree {
     }
   }
 
-  getFolder(path) {
-    if (!path || path == this.root.folderName) { // Si path es undefined o "/"
-      return this.root;
-    } else {
-      let temp = this.root;
-      let folders = path.split("/");
-      folders = folders.filter((str) => str !== "");
-      let folder = null;
-      while (folders.length > 0) {
-        let currentFolder = folders.shift();
-        folder = temp.children.find(
-          (child) => child.folderName == currentFolder
-        );
-        if (typeof folder == "undefined" || folder == null) {
-          return null;
+  getFolder(path){
+    let weight = 1;
+    if(path == this.root.folderName){
+        return {node: this.root, weight: weight};
+    }else{
+        let temp = this.root;
+        let folders = path.split('/');
+        folders = folders.filter( str => str !== '');
+        let folder = null;
+
+        while(folders.length > 0){
+            let currentFolder = folders.shift()
+            folder = temp.children.find(child => child.folderName == currentFolder);
+            if(typeof folder == 'undefined' || folder == null){
+                return null;
+            }
+            temp = folder;
+            weight++;
         }
-        temp = folder;
-      }
-      return temp;
+        return {node: temp, weight: weight}; 
     }
-  }
+}
   
 
   graph() {
@@ -108,17 +91,17 @@ class Tree {
       for (let i = 0; i < len; i++) {
         let node = queue.shift();
         nodes += `S_${node.id}[label="${node.folderName}"];\n`;
-        node.children.forEach((item) => {
-          connections += `S_${node.id} -> S_${item.id};\n`;
+        node.children.forEach( item => {
+          connections += `S_${node.id} -> S_${item.id} [label="${item.weight}"];\n`
           queue.push(item);
-        });
+      });
       }
     }
-    return 'node[shape="record"];\n' + nodes + "\n" + connections;
+    return  '\nlayout=neato; \nedge[dir=none];\n' + nodes +'\n'+ connections;
   }
 
   getHTML(path) {
-    let node = this.getFolder(path);
+    let {node} = this.getFolder(path);
     let code = "";
     node.children.map((child) => {
       code += ` <div class="col-2 folder" onclick="entrarCarpeta('${child.folderName}')">
