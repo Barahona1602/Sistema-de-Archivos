@@ -26,7 +26,6 @@ var elementoBienvenido = document.querySelector("h1");
 elementoBienvenido.textContent = "Bienvenido, " + nombreUsuario;
 let listaCircular = new CircularLinkedList();
 let tree = new Tree();
-let matrix = new SparseMatrix();
 // --------------------------------------------------------------------------------------------------------------------
 
 // ------------------------------------------FUNCIONES DE BOTONES------------------------------------------------------
@@ -146,7 +145,6 @@ function darPermiso() {
   console.log(`Permiso seleccionado: ${permiso}`);
   localStorage.setItem("tree" + carnetEstudiante, JSON.stringify(JSON.decycle(tree)));
   mostrarArchivo();
-  console.log(archivitos)
   const archivoEncontrado = archivitos.find(archivito => archivito.name === archivo);
   const contenidoArchivo = archivoEncontrado.content;
   const datos2 = {
@@ -261,6 +259,16 @@ function logout() {
   window.location.href = "../Login/login.html";
 }
 
+// FUNCIÓN PARA COMPARTIDOS
+function compartidos() {
+  window.location.href = "./compartidos.html";
+}
+
+// FUNCIÓN PARA chat
+function chat() {
+  window.location.href = "./chat.html";
+}
+
 //FUNCION PARA CARGAR ARCHIVOS 
 function mostrarArchivo(){
   let path = $("#path").val();
@@ -345,7 +353,7 @@ function renombreCarpeta() {
 
       // Validación de nombre duplicado
       let parentPath = oldPath.substring(0, oldPath.lastIndexOf("/"));
-      let parentNode = tree.getFolder(parentPath);
+      let {node:parentNode, weight} = tree.getFolder(parentPath);
       let existingFolderNames = parentNode.children.map(
         (child) => child.folderName
       );
@@ -406,15 +414,6 @@ function showGraph() {
   }
 }
 
-
-//GRAFICAR MATRIZ DISPERSA
-function showGraphMD() {
-  $("#graph3").attr("src", ""); 
-  let path = $('#path').val();
-  let url = 'https://quickchart.io/graphviz?graph=';
-  let body = `digraph G { ${tree.matrixGrpah(path)} }`
-  $("#graph3").attr("src", url + body);
-}
 
 
 //GRAFICAR LISTA CIRCULAR
@@ -491,7 +490,8 @@ const toBase64 = (file) =>
   
     // Validar si ya existe un archivo con el mismo nombre en la carpeta actual
     let path = $("#path").val();
-    let folder = tree.getFolder(path);
+    let {node:folder, weight} = tree.getFolder(path);
+    
     if (folder) {
       let existingFileNames = folder.files.map(file => file.name);
       let newName = fileName;
@@ -536,7 +536,6 @@ const toBase64 = (file) =>
           content: parseBase64,
           type: form.file.type,
         });
-        console.log(archivitos);
         const now = new Date();
         const year = now.getFullYear();
         const month = (now.getMonth() + 1).toString().padStart(2, "0");

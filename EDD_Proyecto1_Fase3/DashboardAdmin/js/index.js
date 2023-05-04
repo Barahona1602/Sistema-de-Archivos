@@ -20,6 +20,7 @@ if (sessionStorage.getItem('admin') !== 'admin') {
 // DECLARACIÓN DE LAS ESTRUCTURAS A UTILIZAR
 let avlTree = new AvlTree();
 let tablaHash = new HashTable();
+let blockChain = new BlockChain();
 
 function loadStudentsForm(e) {
   e.preventDefault();
@@ -99,11 +100,32 @@ function loadStudentsForm(e) {
   
 }
 
+// CARGAR DATOS DEL LOCAL STORAGE AL RECARGAR LA PÁGINA
+function loadDataFromLocalStorage() {
+  const studentsData = localStorage.getItem('studentsData');
+  if (studentsData) {
+    const studentsDataArray = JSON.parse(studentsData);
+    for(let i = 0; i < studentsDataArray.length; i++){
+      // desencriptar la contraseña
+      const decryptedPassword = CryptoJS.SHA256(studentsDataArray[i].password).toString();
+      studentsDataArray[i].password = decryptedPassword;
+      avlTree.insert(studentsDataArray[i]);
+    }
+  }
+}
+
+
+function showGraph() {
+  let url = "https://quickchart.io/graphviz?graph=";
+  let body;
+    body = `${blockChain.toDot()}`;
+    $("#graph5").attr("src", url + body);
+}
+
 
 // CARGAR DATOS DEL LOCAL STORAGE AL RECARGAR LA PÁGINA
 function loadPermisosFromLocalStorage() {
   const permisosData = localStorage.getItem('permisosData');
-  console.log(permisosData)
   if (permisosData) {
     const permisosArray = JSON.parse(permisosData);
     $('#permisosTable tbody').html(
@@ -141,46 +163,26 @@ function loadPermisosFromLocalStorage() {
 }
 
 function downloadTxt(text, name) {
-  // Crear un objeto Blob
   const blob = new Blob([text], { type: 'text/plain' });
-
-  // Crear una URL temporal para el Blob
   const url = URL.createObjectURL(blob);
-
-  // Crear un elemento "a" para descargar el archivo
   const a = document.createElement('a');
   a.href = url;
   a.download = name+".txt";
-
-  // Hacer clic en el enlace para descargar el archivo
   document.body.appendChild(a);
   a.click();
-
-  // Limpiar la URL temporal
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
 
 
 
-// CARGAR DATOS DEL LOCAL STORAGE AL RECARGAR LA PÁGINA
-function loadDataFromLocalStorage() {
-  const studentsData = localStorage.getItem('studentsData');
-  if (studentsData) {
-    const studentsDataArray = JSON.parse(studentsData);
-    for(let i = 0; i < studentsDataArray.length; i++){
-      // desencriptar la contraseña
-      const decryptedPassword = CryptoJS.SHA256(studentsDataArray[i].password).toString();
-      studentsDataArray[i].password = decryptedPassword;
-      avlTree.insert(studentsDataArray[i]);
-    }
-  }
-}
+
 
 // EVENTO ONLOAD PARA CARGAR DATOS DEL LOCAL STORAGE AL RECARGAR LA PÁGINA
 window.onload = function() {
   loadDataFromLocalStorage();
   loadPermisosFromLocalStorage();
+  getBlock(0);
 };
 
 // FUNCIÓN PARA GRAPHVIZ
@@ -195,4 +197,48 @@ function logout() {
   window.location.href = "../Login/login.html";
 }
 
+let block = JSON.retrocycle(JSON.parse(localStorage.getItem("blockChain")));
+if (block !== null && block !== undefined) {
+    blockChain = Object.assign(new BlockChain(), block);
+  }
+
+
+  function getBlock(index){
+    if(index === 0){
+      let html = blockChain.blockReport(index);
+      if(html){
+          $('#show-block').html(html);
+      } else {
+          Swal.fire({title: "Error", icon: "error", text: "No se pudo obtener el bloque",});
+      }
+    }else{
+        let currentBlock = Number($('#block-table').attr('name'));
+
+        if(index < 0){ // MOSTRAR EL ANTERIOR
+            if(currentBlock - 1 < 0){
+                Swal.fire({title: "Alerta", icon: "warning",text: "Estás en el bloque inicial",});
+            } else {
+                let html = blockChain.blockReport(currentBlock - 1);
+                if(html){
+                    $('#show-block').html(html);
+                    $('#block-table').attr('name', currentBlock - 1);
+                } else {
+                    Swal.fire({title: "Alerta", icon: "warning", text: "Estás en el bloque inicial",});
+                }
+            }
+        } else if(index > 0){ // MOSTRAR EL SIGUIENTE
+            if(currentBlock + 1 > blockChain.size ){
+                Swal.fire({title: "Alerta", icon: "warning", text: "No hay más bloques",});
+            } else {
+                let html = blockChain.blockReport(currentBlock + 1);
+                if(html){
+                    $('#show-block').html(html);
+                    $('#block-table').attr('name', currentBlock + 1);
+                } else {
+                    Swal.fire({title: "Alerta", icon: "warning", text: "No hay más bloques", });
+                }
+            }
+        }
+    }
+}
 

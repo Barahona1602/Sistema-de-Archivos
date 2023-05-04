@@ -2,8 +2,8 @@ class Tnode {
   constructor(folderName, weight){
     this.folderName = folderName;
     this.files = [];
-    this.children = []; // TODOS LOS NODOS HIJOS
-    this.id = null; // PARA GENERAR LA GRÁFICA
+    this.children = []; 
+    this.id = null; 
     this.weight = weight;
 }
 }
@@ -15,27 +15,29 @@ class Tree {
     this.size = 1;
   }
 
-  insert(folderName, fatherPath){ 
+  insert(folderName, fatherPath) {
     let {node:fatherNode, weight} = this.getFolder(fatherPath);
-    let newNode =  new Tnode(folderName, weight);
-    // console.log(newNode)
-    if(fatherNode){
-        this.size += 1;
-        newNode.id = this.size;
-        fatherNode.children.push(newNode);
-    }else{
-        console.log("Ruta no existe");
+    if (!fatherNode) {
+      console.log("Ruta no existe");
+      return;
     }
 
-    let existingFolderNames = fatherNode.children.map((child) => child.folderName);
+    let existingFolderNames = fatherNode.children.map(
+      (child) => child.folderName
+    );
     let newName = folderName;
     let counter = 1;
     while (existingFolderNames.includes(newName)) {
       newName = `copia${counter} ${folderName}`;
       counter++;
     }
-    existingFolderNames[existingFolderNames.indexOf(folderName)] = newName;
-    newNode.folderName = newName;
+
+    let newNode = new Tnode(newName, weight);
+    this.size += 1;
+    newNode.id = this.size;
+    fatherNode.children.push(newNode);
+
+    return newName;
   }
 
   
@@ -55,6 +57,7 @@ class Tree {
     }
   }
 
+  
   getFolder(path){
     let weight = 1;
     if(path == this.root.folderName){
@@ -100,6 +103,8 @@ class Tree {
     return  '\nlayout=neato; \nedge[dir=none];\n' + nodes +'\n'+ connections;
   }
 
+  
+
   getHTML(path) {
     let {node} = this.getFolder(path);
     let code = "";
@@ -131,7 +136,7 @@ class Tree {
   }
 
   renameFolder(oldPath, newName) {
-    let node = this.getFolder(oldPath);
+    let {node:node} = this.getFolder(oldPath);
     if (node !== null) {
       let newPath = "";
       if (oldPath !== "/") {

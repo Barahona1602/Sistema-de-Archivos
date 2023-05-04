@@ -277,6 +277,155 @@ h1, h2, h3, h4, h5, h6 {
     src: url('../fonts/montserrat/Montserrat-Medium.ttf'); 
   }
 
+  #transmitter {
+    height: 65vh;
+    overflow-y: scroll;
+}
 
+  #transmitter-chat {
+    height: 65vh;
+    overflow-y: scroll;
+    border: 1px solid transparent !important;
+  }
+  
+  #transmitter {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: transparent;
+    color: #ffffff;
+  }
+  
+  #transmitter option {
+    background-color: rgba(255, 255, 255, 0);
+    transition: background-color 0.2s ease-in-out;
+    line-height: 2;
+    border: 1px #ffffff46;
+    border-style: none none solid none;
+  }
+  
+  #transmitter option:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  
+  #transmitter option:checked {
+    background-color: #ffffff;
+    color: #000000;
+  }
+  
+  #transmitter:focus {
+    outline: none;
+  }
+  
+  /* Estilos para aumentar el espacio entre las opciones */
+  #transmitter option {
+    padding: 10px;
+  }
+  
+  #archivos {
+    height: 65vh;
+    overflow-y: scroll;
+}
+
+#visualizador {
+  height: 65vh;
+  border: 1px solid transparent !important;
+}
+  
+  #archivos {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: transparent;
+    color: #ffffff;
+  }
+  
+  #archivos option {
+    background-color: rgba(255, 255, 255, 0);
+    transition: background-color 0.2s ease-in-out;
+    line-height: 2;
+    border: 1px #ffffff46;
+    border-style: none none solid none;
+  }
+  
+  #archivos option:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  
+  #archivos option:checked {
+    background-color: #ffffff;
+    color: #000000;
+  }
+  
+  #archivos:focus {
+    outline: none;
+  }
+  
+  /* Estilos para aumentar el espacio entre las opciones */
+  #archivos option {
+    padding: 10px;
+  }
+
+/* Estilos para el scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e1e1e1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #6c757d;
+  border-radius: 10px;
+  border: 3px solid #e1e1e1;
+}
+
+/* Estilos para el select */
+select::-webkit-scrollbar {
+  width: 10px;
+}
+
+select::-webkit-scrollbar-track {
+  background: #e1e1e1;
+  border-radius: 10px;
+}
+
+select::-webkit-scrollbar-thumb {
+  background-color: #6c757d;
+  border-radius: 10px;
+  border: 3px solid #e1e1e1;
+}
+
+/* Estilos para el div */
+#transmitter-chat::-webkit-scrollbar {
+  width: 10px;
+}
+
+#transmitter-chat::-webkit-scrollbar-track {
+  background: #e1e1e1;
+  border-radius: 10px;
+}
+
+#transmitter-chat::-webkit-scrollbar-thumb {
+  background-color: #6c757d;
+  border-radius: 10px;
+  border: 3px solid #e1e1e1;
+}
+
+/* Estilos para los mensajes enviados */
+.list-group-item.sent {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 10px 10px 0 10px;
+  margin: 10px 0 0 50px;
+}
+
+/* Estilos para los mensajes recibidos */
+.list-group-item.received {
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 10px 10px 10px 0;
+  margin: 10px 0px 0 0;
+}
 
 

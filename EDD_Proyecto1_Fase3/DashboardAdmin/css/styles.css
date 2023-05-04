@@ -138,3 +138,14 @@ h1, h2, h3, h4, h5, h6 {
     font-family: Montserrat-Medium;
     src: url('../fonts/montserrat/Montserrat-Medium.ttf'); 
   }
+
+  .scrollable-image {
+    width: auto; /* establece la anchura deseada */
+    height: auto; /* ajusta la altura automáticamente */
+    overflow: auto; /* permite desplazarse horizontal y verticalmente si la imagen es más grande que la anchura fija */
+  }
+  
+  .scrollable-image img {
+    display: block; /* elimina el espacio en blanco debajo de la imagen */
+    margin: auto; /* centra la imagen horizontalmente */
+  }
