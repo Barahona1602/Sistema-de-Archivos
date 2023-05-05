@@ -168,7 +168,7 @@ function darPermiso() {
 //FUNCION PARA BOTON DE ELIMINAR CARPETA
 function eliminarCarpeta() {
   let path = $("#path").val();
-  let folderNode = tree.getFolder(path);
+  let {node:folderNode, weight} = tree.getFolder(path);
   if (folderNode === null) {
     Swal.fire({
       icon: "warning",
@@ -182,7 +182,7 @@ function eliminarCarpeta() {
       text: "Seleccione una carpeta para eliminar",
     });
   } else {
-    let parentNode = tree.getFolder(path.split("/").slice(0, -1).join("/"));
+    let {node:parentNode, weight} = tree.getFolder(path.split("/").slice(0, -1).join("/"));
     if (parentNode === null) {
       console.log("No se puede eliminar la carpeta: padre no encontrado");
     } else {
@@ -230,7 +230,7 @@ function eliminarCarpeta() {
             "success"
           );
           localStorage.setItem("tree" + carnetEstudiante, JSON.stringify(JSON.decycle(tree)));
-          $("#carpetas").html(tree.getHTML(path));
+          //$("#carpetas").html(tree.getHTML(path));
         }
       });
     }
@@ -241,7 +241,7 @@ function eliminarCarpeta() {
 function entrarCarpeta(folderName) {
   let path = $("#path").val();
   let currentPath = path == "/" ? path + folderName : path + "/" + folderName;
-  let folderNode = tree.getFolder(currentPath);
+  let {node:folderNode} = tree.getFolder(currentPath);
   if (folderNode !== null) {
     $("#path").val(currentPath);
     $("#carpetas").html(tree.getHTML(currentPath));
