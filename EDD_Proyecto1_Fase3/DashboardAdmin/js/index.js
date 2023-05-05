@@ -66,7 +66,16 @@ function loadStudentsForm(e) {
           text: `Los estudiantes con los siguientes carnets ya existen en la lista: ${repeatedStudentsArray.join(', ')}`
         });
       }
+
+      for(let i = 0; i < newStudentsArray.length; i++){
+        const encryptedPassword = CryptoJS.SHA256(newStudentsArray[i].password).toString();
+        newStudentsArray[i].password = encryptedPassword;
+        avlTree.insert(newStudentsArray[i]);
+
+      }
+
       
+
       // GUARDAR DATOS EN LOCALSTORAGE
       localStorage.setItem('studentsData', JSON.stringify(studentsDataArray));
       studentsData = localStorage.getItem('studentsData');
@@ -76,9 +85,9 @@ function loadStudentsForm(e) {
           // desencriptar la contraseña
           const decryptedPassword = CryptoJS.SHA256(studentsDataArray[i].password).toString();
           studentsDataArray[i].password = decryptedPassword;
+          avlTree.insert(studentsDataArray[i]);
         }
       }
-      loadDataFromLocalStorage()
     }
   } catch(error){
     Swal.fire({
@@ -232,4 +241,3 @@ if (block !== null && block !== undefined) {
         }
     }
 }
-
